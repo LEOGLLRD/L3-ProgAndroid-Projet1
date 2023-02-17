@@ -12,10 +12,10 @@ import com.example.inventairelol.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link NavBar#newInstance} factory method to
+ * Use the {@link InventoryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NavBar extends Fragment {
+public class InventoryFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class NavBar extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public NavBar() {
+    public InventoryFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class NavBar extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NavBar.
+     * @return A new instance of fragment InventoryFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NavBar newInstance(String param1, String param2) {
-        NavBar fragment = new NavBar();
+    public static InventoryFragment newInstance(String param1, String param2) {
+        InventoryFragment fragment = new InventoryFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class NavBar extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_nav_bar, container, false);
+        return inflater.inflate(R.layout.fragment_inventory, container, false);
     }
 }
