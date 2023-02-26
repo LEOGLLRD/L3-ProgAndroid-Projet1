@@ -14,4 +14,11 @@
         android:textSize="26dp"
         android:text="Profile Fragment" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Se connecter"
+        android:id="@+id/goProfil"
+        />
+
 </FrameLayout>

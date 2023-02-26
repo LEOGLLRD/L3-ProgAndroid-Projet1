@@ -1,4 +1,4 @@
-package com.example.inventairelol;
+package com.example.inventairelol.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.example.inventairelol.Fragments.HomeFragment;
 import com.example.inventairelol.Fragments.InventoryFragment;
 import com.example.inventairelol.Fragments.ProfileFragment;
+import com.example.inventairelol.R;
 import com.example.inventairelol.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
