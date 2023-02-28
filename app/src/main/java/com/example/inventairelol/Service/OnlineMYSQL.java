@@ -26,19 +26,24 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
 
     }
 
+
+    //Méthode appelée avant le processus long
     @Override
     protected void onPreExecute() {
 
+        //Affichage d'un écran de chargement avant exécution du processus long
         progressDialog = ProgressDialog.show(context, "Chargement", "En attente de connexion avec le serveur");
         progressDialog.show();
 
 
     }
 
+    //Méthode appelée après exécution du processus long
     @Override
     protected void onPostExecute(String s) {
 
-        Log.i("In", "in");
+
+        //Suppression du chargement
         progressDialog.dismiss();
     }
 
@@ -46,14 +51,18 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... strings) {
         try {
 
+            //On récupère l'action à réaliser
             String directiv = strings[0];
-            Log.i("directiv", directiv);
+
 
             switch (directiv) {
+                //Si "connect"
                 case "connect": {
+                    //On se connect à la BDD
                     connect();
                     break;
                 }
+                //Si regsiter on appel la fonction register
                 case "register": {
                     String mail = strings[1];
                     String pseudo = strings[2];
@@ -62,6 +71,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
 
 
                 }
+                //Si login appel de la méthode login
                 case "login": {
                     break;
                 }
@@ -78,12 +88,10 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
     private boolean connect() {
         try {
 
+            //Récupération du driver
             Class.forName("com.mysql.jdbc.Driver");
-            Log.i("url", url);
-            Log.i("user", user);
-            Log.i("pass", pass);
 
-
+            //Exécution de la connection dans un nouveau Thread
             Thread t = new Thread(() -> {
                 try {
                     connection = DriverManager.getConnection(url, user, pass);
@@ -91,13 +99,11 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                     e.printStackTrace();
                 }
             });
+            //Démarrage du Thread
             t.start();
+            //Si le Thread prend plus de 10sec à se termniner on le kill
             t.join(10000);
-
-
-            Log.i("info", "succes");
-            Log.i("conn", connection.toString());
-
+            
             return true;
 
 
