@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        //Pour la barre de naviguation
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         replaceFragment(new HomeFragment());
@@ -104,8 +106,5 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
-
-
-
     }
 }
