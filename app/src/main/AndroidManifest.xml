@@ -17,7 +17,13 @@
         android:theme="@style/Theme.InventaireLoL"
         tools:targetApi="31">
 
+        <activity 
+            android:name=".Activities.Register"
+            android:exported="false" />
         <activity
+            android:name=".Activities.Login"
+            android:exported="false" />
+        <activity 
             android:name=".Activities.MainActivity"
             android:exported="true">
             <intent-filter>
