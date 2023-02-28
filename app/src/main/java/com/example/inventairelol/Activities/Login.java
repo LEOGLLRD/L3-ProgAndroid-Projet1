@@ -2,6 +2,7 @@ package com.example.inventairelol.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,13 +30,21 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 //a modifier
+                Context context = getApplicationContext();
                 if(username.getText().toString().equals("test")){
-                    Toast.makeText(Login.this, "Connexion réussi",Toast.LENGTH_SHORT);
+                    CharSequence text = "Connecté!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
                 }else{
-                    Toast.makeText(Login.this, "Connexion failed",Toast.LENGTH_SHORT);
+                    CharSequence text = "Echec de la connexion!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
                 }
             }
-
 
         });
 
