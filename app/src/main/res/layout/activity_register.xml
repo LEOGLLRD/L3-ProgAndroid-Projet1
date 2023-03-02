@@ -12,7 +12,7 @@
         android:id="@+id/register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="S'inscire"
+        android:text="@string/register"
         android:textColor="@color/white"
         android:textSize="35dp"
         android:textStyle="bold"
@@ -26,7 +26,7 @@
         android:id="@+id/mail"
         android:background="#30ffffff"
         android:layout_below="@+id/register"
-        android:hint="Email"
+        android:hint="@string/email"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:layout_margin="10dp"
@@ -41,7 +41,7 @@
         android:id="@+id/pseudo"
         android:background="#30ffffff"
         android:layout_below="@+id/mail"
-        android:hint="Pseudo"
+        android:hint="@string/pseudo"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:layout_margin="10dp"
@@ -56,7 +56,7 @@
         android:id="@+id/password"
         android:background="#30ffffff"
         android:layout_below="@+id/pseudo"
-        android:hint="Password"
+        android:hint="@string/Password"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:layout_margin="10dp"
@@ -74,7 +74,7 @@
         android:padding="20dp"
         android:drawablePadding="20dp"
         android:backgroundTint="#30ffffff"
-        android:text="Choisir un image de profil"
+        android:text="@string/chooseFile"
         android:drawableLeft="@drawable/baseline_image_search_24"
 
         />
@@ -91,14 +91,14 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:backgroundTint="@color/design_default_color_primary_variant"
-        android:text="S'inscrire" />
+        android:text="@string/register" />
 
 
     <TextView
         android:id="@+id/alreadyRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Déjà inscris ?"
+        android:text="@string/alreadyRegister"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:layout_above="@+id/goLogin"
@@ -114,7 +114,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:background="@android:color/transparent"
-        android:text="Se connecter" />
+        android:text="@string/login" />
 
 
 </RelativeLayout>
