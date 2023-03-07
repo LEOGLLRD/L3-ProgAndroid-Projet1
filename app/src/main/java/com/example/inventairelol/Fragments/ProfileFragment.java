@@ -1,6 +1,8 @@
 package com.example.inventairelol.Fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,11 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.inventairelol.Activities.Login;
 import com.example.inventairelol.Activities.MainActivity;
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.OnlineMYSQL;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,7 +76,19 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+
+
+        try {
+            URL urlLogo = new URL("http://ddragon.leagueoflegends.com/cdn/13.4.1/img/profileicon/5719.png");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        ImageView imageView = (ImageView) view.findViewById(R.id.imageView1);
 
         Button button = (Button) view.findViewById(R.id.goProfil);
 
@@ -85,6 +106,8 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
+
+
 
 
 }
