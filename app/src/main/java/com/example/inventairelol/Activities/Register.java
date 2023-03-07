@@ -25,7 +25,9 @@ import java.util.regex.Pattern;
 public class Register extends AppCompatActivity {
 
     OnlineMYSQL onlineMYSQL;
-    EditText mail, pseudo, password;
+    EditText eMail, ePseudo, ePassword;
+    String username, url, password;
+    private Register register = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +37,9 @@ public class Register extends AppCompatActivity {
 
         try {
             //Récupération des EditTexts
-            this.mail = findViewById(R.id.mail);
-            this.pseudo = findViewById(R.id.pseudo);
-            this.password = findViewById(R.id.password);
+            this.eMail = findViewById(R.id.mail);
+            this.ePseudo = findViewById(R.id.pseudo);
+            this.ePassword = findViewById(R.id.password);
 
             //Récupération du fichier de configuration de la base de données
             Properties p = new Properties();
@@ -49,12 +51,10 @@ public class Register extends AppCompatActivity {
             String hostname = p.getProperty("hostname");
             String port = p.getProperty("port");
             String database = p.getProperty("database");
-            String username = p.getProperty("username");
-            String password = p.getProperty("password");
-            String url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
+            this.username = p.getProperty("username");
+            this.password = p.getProperty("password");
+            this.url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
 
-            //Puis instanciation de la variable de connexion et connexion
-            this.onlineMYSQL = new OnlineMYSQL(this, url, username, password);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,61 +75,73 @@ public class Register extends AppCompatActivity {
 
 
         //Gestion Enregistrement
-        Button register = (Button) findViewById(R.id.registerbtn);
+        Button registerBtn = (Button) findViewById(R.id.registerbtn);
 
-        register.setOnClickListener(new View.OnClickListener() {
+        registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                onlineMYSQL.execute("register", mail.getText().toString(), pseudo.getText().toString(), password.getText().toString());
-                try {
-                    String res = onlineMYSQL.get();
-                    //On voit avec un pattern Regex si on le String de retour contient "Fail"
-                    Pattern pattern;
-                    Matcher matcher;
-                    pattern = Pattern.compile("Fail");
-                    matcher = pattern.matcher(res);
+                onlineMYSQL = new OnlineMYSQL(register, url, username, password);
 
+                Log.i("click", "click");
+
+                onlineMYSQL.execute("register", eMail.getText().toString(), ePseudo.getText().toString(), ePassword.getText().toString());
+                try {
+
+
+                    //On créer une Alerte pour informer l'utilisateur
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Register.this);
+                    builder.setTitle(R.string.errorRegisterTitle)
+                            .setMessage(R.string.emptyPasswordRegister)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(getApplicationContext(), R.string.understood, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+
+
+                    String res = onlineMYSQL.get();
                     String message = "";
 
                     //Si on trouve le message Fail
-                    if (matcher.find()) {
+                    if (res.contains("Fail")) {
+
+                        Log.i("matcher", "Fail");
 
                         //On vérifie quel est la cause du Fail
-                        pattern = Pattern.compile("Password Empty");
-                        matcher = pattern.matcher(res);
                         //Si c'est à cause d'un password vide
-                        if (matcher.find()) {
-                            message = String.valueOf(R.string.emptyPasswordRegister);
-                        }
-                        //On vérifie quel est la cause du Fail
-                        pattern = Pattern.compile("Mail or Pseudo already used");
-                        matcher = pattern.matcher(res);
-                        //Si c'est à cause d'un password vide
-                        if (matcher.find()) {
-                            message = String.valueOf(R.string.alreadyUsedPseudoOrMailRegister);
+                        if (res.contains("Password Empty")) {
+                            builder.setMessage(R.string.emptyPasswordRegister);
                         }
 
-                        //On créer une Alerte pour informer l'utilisateur
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                        builder.setTitle(R.string.errorRegisterTitle)
-                                .setMessage(message)
-                                .setCancelable(false)
-                                .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(getApplicationContext(), "Selected Option: YES", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                        //Si c'est à cause d'un password vide
+                        else if (res.contains("Mail or Pseudo already used")) {
+                            builder.setMessage(R.string.alreadyUsedPseudoOrMailRegister);
+                        }
+
+                        builder.show();
+                    }
+                    //On voit avec un pattern Regex si on le String de retour contient "Error"
+
+                    else if (res.contains("Error")) {
+                        Log.i("matcher", "Error");
+                    }
+                    //Pas d'erreurs / echecs dans l'enregistrement
+                    else {
+                        Log.i("matcher", "Succes");
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                Intent intent = new Intent(Register.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+
             }
 
 

@@ -59,8 +59,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String>{
     protected void onPostExecute(String s) {
 
 
-        //Suppression du chargement
-        progressDialog.dismiss();
+
     }
 
     @Override
@@ -77,30 +76,45 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String>{
                     //On se connect à la BDD
                     connect();
                     Log.i("connected ?", String.valueOf(isDbConnected()));
+                    //Suppression du chargement
+                    progressDialog.dismiss();
                     break;
                 }
                 //Si regsiter on appel la fonction register
                 case "register": {
 
+                    //On se connecte à la base de données
                     connect();
+                    //Vérification si la connexion est valide
                     if (!isDbConnected()) {
+                        //Suppression du chargement
+                        progressDialog.dismiss();
                         return "Error : Not Connected";
-
                     }
-
+                    //Récupération du mail, pseudo, et password
                     String mail = strings[1];
                     String pseudo = strings[2];
                     String password = strings[3];
 
                     //On vérifie que le password n'est pas vide
-                    if (password == "") {
+                    if (password.isEmpty()) {
+                        //Suppression du chargement
+                        progressDialog.dismiss();
+                        Log.i("end", "end");
                         return "Fail : Password Empty";
                     }
                     //On vérifie que le mail et le pseudo ne sont pas utilisés
                     if (areMailOrPseudoUsed(mail, pseudo)[0] || areMailOrPseudoUsed(mail, pseudo)[1]) {
+                        //Suppression du chargement
+                        progressDialog.dismiss();
+                        Log.i("end", "end");
                         return "Fail : Mail or Pseudo already used";
+                    //Pas d'échecs ni d'erreurs
                     } else {
                         register(pseudo, mail, password);
+                        //Suppression du chargement
+                        progressDialog.dismiss();
+                        Log.i("end", "end");
                         return "Success : Register Done";
                     }
 
@@ -111,8 +125,10 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String>{
                 case "login": {
                     connect();
                     if (!isDbConnected()) {
-                        break;
+                        return "Error : Not Connected";
                     }
+                    //
+
                     break;
                 }
             }
