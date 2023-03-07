@@ -76,7 +76,6 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 //Récupération de la variable de Base de Données
                 MainActivity mainActivity = (MainActivity) getActivity();
-                OnlineMYSQL onlineMYSQL = mainActivity.onlineMYSQL;
                 Intent intent = new Intent(getActivity().getApplicationContext(), Login.class);
                 startActivity(intent);
 
