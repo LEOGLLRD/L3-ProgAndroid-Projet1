@@ -14,6 +14,7 @@ import android.widget.Button;
 import com.example.inventairelol.Activities.Login;
 import com.example.inventairelol.Activities.MainActivity;
 import com.example.inventairelol.R;
+import com.example.inventairelol.Service.OnlineMYSQL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,8 +74,11 @@ public class ProfileFragment extends Fragment {
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                //Récupération de la variable de Base de Données
+                MainActivity mainActivity = (MainActivity) getActivity();
                 Intent intent = new Intent(getActivity().getApplicationContext(), Login.class);
                 startActivity(intent);
+
             }
         });
 

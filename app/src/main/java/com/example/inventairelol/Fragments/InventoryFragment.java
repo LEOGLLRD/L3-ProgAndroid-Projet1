@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.inventairelol.R;
+import com.example.inventairelol.Service.OnlineMYSQL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,8 +27,10 @@ public class InventoryFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+
     public InventoryFragment() {
         // Required empty public constructor
+
     }
 
     /**

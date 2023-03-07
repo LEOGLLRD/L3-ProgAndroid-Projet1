@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Inventaire LoL</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Bonjour blank fragment</string>
     <string name="btnGoRegister">S\'inscrire</string>
     <string name="noAlreadyRegister">Pas encore inscris ?</string>
@@ -14,5 +13,10 @@
     <string name="home">Accueil</string>
     <string name="inventory">Inventaire</string>
     <string name="profile">Profil</string>
+    <string name="errorRegisterTitle">Echec de l\'enregistrement</string>
+    <string name="emptyPasswordRegister">Vous devez avoir un mot de passe qui n\'est pas vide !</string>
+    <string name="alreadyUsedPseudoOrMailRegister">Mot de passe ou pseudo déjà utilisés !</string>
+    <string name="understood">Compris !</string>
+
 
 </resources>
