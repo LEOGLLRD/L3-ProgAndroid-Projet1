@@ -61,6 +61,7 @@ public class Register extends AppCompatActivity {
         }
 
 
+        //Retour à la page de connexion
         Button buttonLogin = (Button) findViewById(R.id.goLogin);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +73,8 @@ public class Register extends AppCompatActivity {
             }
         });
 
+
+        //Gestion Enregistrement
         Button register = (Button) findViewById(R.id.registerbtn);
 
         register.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +90,8 @@ public class Register extends AppCompatActivity {
                     pattern = Pattern.compile("Fail");
                     matcher = pattern.matcher(res);
 
+                    String message = "";
+
                     //Si on trouve le message Fail
                     if (matcher.find()) {
 
@@ -95,18 +100,27 @@ public class Register extends AppCompatActivity {
                         matcher = pattern.matcher(res);
                         //Si c'est à cause d'un password vide
                         if (matcher.find()) {
-                            //On créer une Alerte pour informer l'utilisateur
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                            builder.setTitle(R.string.errorRegisterTitle)
-                                    .setMessage("Vous devez avoir un mot de passe qui n'est pas vide !")
-                                    .setCancelable(false)
-                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Toast.makeText(getApplicationContext(), "Selected Option: YES", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                            message = String.valueOf(R.string.emptyPasswordRegister);
                         }
+                        //On vérifie quel est la cause du Fail
+                        pattern = Pattern.compile("Mail or Pseudo already used");
+                        matcher = pattern.matcher(res);
+                        //Si c'est à cause d'un password vide
+                        if (matcher.find()) {
+                            message = String.valueOf(R.string.alreadyUsedPseudoOrMailRegister);
+                        }
+
+                        //On créer une Alerte pour informer l'utilisateur
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                        builder.setTitle(R.string.errorRegisterTitle)
+                                .setMessage(message)
+                                .setCancelable(false)
+                                .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Toast.makeText(getApplicationContext(), "Selected Option: YES", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
                 } catch (ExecutionException e) {
                     e.printStackTrace();
@@ -119,5 +133,7 @@ public class Register extends AppCompatActivity {
             }
 
 
-        }
+        });
+
     }
+}
