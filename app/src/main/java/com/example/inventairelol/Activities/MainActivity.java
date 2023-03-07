@@ -15,6 +15,7 @@ import com.example.inventairelol.Fragments.InventoryFragment;
 import com.example.inventairelol.Fragments.ProfileFragment;
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.OnlineMYSQL;
+import com.example.inventairelol.Util.ApiLol;
 import com.example.inventairelol.databinding.ActivityMainBinding;
 
 import java.io.InputStream;
@@ -23,6 +24,8 @@ import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
+
+    ApiLol apiLol = new ApiLol();
 
 
     SQLiteBDDHelper bddHelper;
