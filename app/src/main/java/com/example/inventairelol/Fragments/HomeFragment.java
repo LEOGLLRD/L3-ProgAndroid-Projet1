@@ -1,15 +1,29 @@
 package com.example.inventairelol.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.inventairelol.R;
+import com.example.inventairelol.Service.GetMethodDemo;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,14 +82,62 @@ public class HomeFragment extends Fragment {
         TextView textView = (TextView) v.findViewById(R.id.test);
 
         //test d'une requete
+        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo().execute("https://EUW1.api.riotgames.com/lol/summoner/v4/summoners/by-name/FAUNEAUDIN1231?api_key=RGAPI-bd4eddec-3547-4c08-96c9-5dc3c71a1f6a");
 
-        textView.setText("gogole");
+        try {
+            String str = "[" + getMethodDemo.get() + "]";
+            // test.replaceAll("\"", "\\" + "\"" );
+            //ArrayList<String> arrayList = jsonStringToArray(test);
+            JSONArray array = new JSONArray(str);
+            Log.v("array", array.toString());
 
+            String id = null, accountId = null, puuid = null, name = null, profileIconId = null, summonerLevel = null;
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+
+                id = object.getString("id");
+                accountId = object.getString("accountId");
+                puuid = object.getString("puuid");
+                name = object.getString("name");
+                profileIconId = object.getString("profileIconId");
+                summonerLevel = object.getString("summonerLevel");
+
+
+            }
+            SharedPreferences accountLol = getContext().getSharedPreferences("accountLol", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = accountLol.edit();
+
+            editor.putString("id", id);
+            editor.putString("accountId", accountId);
+            editor.putString("puuid", puuid);
+            editor.putString("name", name);
+            editor.putString("profileIconId", profileIconId);
+            editor.putString("summonerLevel", summonerLevel);
+            editor.commit();
+            Map<String, String> map = (Map<String, String>) accountLol.getAll();
+
+
+            textView.setText(map.get("name"));
+
+
+        } catch (InterruptedException | ExecutionException | JSONException e) {
+            throw new RuntimeException(e);
+        }
         return v;
     }
 
+    ArrayList<String> jsonStringToArray(String jsonString) throws JSONException {
 
+        ArrayList<String> stringArray = new ArrayList<String>();
 
+        JSONArray jsonArray = new JSONArray(jsonString);
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            stringArray.add(jsonArray.getString(i));
+        }
+
+        return stringArray;
+    }
 
 
 }
