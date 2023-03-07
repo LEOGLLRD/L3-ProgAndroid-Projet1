@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Inventory LoL</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btnGoRegister">Register</string>
+    <string name="noAlreadyRegister">Not yet register ?</string>
+    <string name="login">Login</string>
+    <string name="Password">Password</string>
+    <string name="pseudo">Pseudo</string>
+    <string name="alreadyRegister">Already registered?</string>
+    <string name="register">Register</string>
+    <string name="chooseFile">Choose a profile picture</string>
+    <string name="email">Email</string>
+    <string name="home">Home</string>
+    <string name="inventory">Inventory</string>
+    <string name="profile">Profile</string>
+
+
+
+
+
+
+
+
+
+
+
+</resources>

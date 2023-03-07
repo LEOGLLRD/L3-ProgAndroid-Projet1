@@ -11,7 +11,7 @@
         android:id="@+id/signin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Se connecter"
+        android:text="@string/login"
         android:textColor="@color/white"
         android:textSize="35dp"
         android:textStyle="bold"
@@ -24,7 +24,7 @@
         android:id="@+id/username"
         android:background="#30ffffff"
         android:layout_below="@+id/signin"
-        android:hint="Username"
+        android:hint="@string/pseudo"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:layout_margin="10dp"
@@ -39,7 +39,7 @@
         android:id="@+id/password"
         android:background="#30ffffff"
         android:layout_below="@+id/username"
-        android:hint="Password"
+        android:hint="@string/Password"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:layout_margin="10dp"
@@ -56,13 +56,13 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
         android:backgroundTint="@color/design_default_color_primary_variant"
-        android:text="Se connecter" />
+        android:text="@string/login" />
 
     <TextView
         android:id="@+id/notAlreadyRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pas encore inscris ?"
+        android:text="@string/noAlreadyRegister"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:layout_above="@+id/goRegister"
@@ -78,6 +78,6 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:background="@android:color/transparent"
-        android:text="Se connecter" />
+        android:text="@string/btnGoRegister" />
 
 </RelativeLayout>
