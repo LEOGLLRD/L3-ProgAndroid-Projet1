@@ -10,22 +10,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.inventairelol.R;
+import com.example.inventairelol.Service.OnlineMYSQL;
 import com.google.android.material.button.MaterialButton;
 
 public class Login extends AppCompatActivity {
+
+    OnlineMYSQL onlineMYSQL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Récupération des variables
         TextView username = (TextView) findViewById(R.id.username);
         TextView password = (TextView) findViewById(R.id.password);
-
         MaterialButton loginbtn = (MaterialButton) findViewById(R.id.loginbtn);
 
-        //methode pour la connexion
-
+        //Appelé quand le bouton de connexion est pressé
         loginbtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -48,7 +50,10 @@ public class Login extends AppCompatActivity {
 
         });
 
+        //Récupération du bouton pour aller à l'inscription
         MaterialButton goRegisterbtn = (MaterialButton) findViewById(R.id.goRegister);
+
+        //Appelé quand le bouton aller à l'inscription est appelé
         goRegisterbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
