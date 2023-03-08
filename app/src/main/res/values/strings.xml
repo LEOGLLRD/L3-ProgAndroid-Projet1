@@ -14,5 +14,17 @@
     <string name="home">Accueil</string>
     <string name="inventory">Inventaire</string>
     <string name="profile">Profil</string>
+    <string name="errorRegisterTitle">Echec de l\'enregistrement</string>
+    <string name="emptyPassword">Votre mot de passe ne peut pas être vide !</string>
+    <string name="emptyPseudo">Votre pseudo ne peut pas être vide !</string>
+    <string name="emptyMail">Votre mail ne peut pas être vide !</string>
+    <string name="alreadyUsedPseudoOrMail">Mail ou pseudo déjà utilisés !</string>
+    <string name="understood">Compris !</string>
+    <string name="errorMessage">Une erreur a eu lieu, réessayez !</string>
+    <string name="errorLoginTitle">Echec de la connexion</string>
+    <string name="wrongPasswordOrPseudo">Mauvais mot de passe ou pseudo !</string>
+    <string name="connected">Connecté !</string>
+    <string name="remember">S\'en souvenir</string>
+
 
 </resources>

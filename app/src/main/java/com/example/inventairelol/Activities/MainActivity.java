@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 
@@ -18,6 +19,7 @@ import com.example.inventairelol.Service.OnlineMYSQL;
 import com.example.inventairelol.databinding.ActivityMainBinding;
 
 import java.io.InputStream;
+import java.util.PrimitiveIterator;
 import java.util.Properties;
 
 
@@ -42,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         try {
 
-
-
-            isConnected = false;
 
             //Récupération du fichier de configuration de la base de données
             Properties p = new Properties();
@@ -71,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //On vérifie si il y a un compte enregistré
+        SharedPreferences sharedPreferences = this.getPreferences(MODE_PRIVATE);
+        
 
 
         //Pour la barre de naviguation
