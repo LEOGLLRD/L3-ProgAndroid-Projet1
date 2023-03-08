@@ -25,7 +25,6 @@
     <string name="errorLoginTitle">Login Failed</string>
     <string name="wrongPasswordOrPseudo">Wrong pseudo or password !</string>
     <string name="connected">Connected !</string>
-
-
+    <string name="remember">Remember</string>
 
 </resources>

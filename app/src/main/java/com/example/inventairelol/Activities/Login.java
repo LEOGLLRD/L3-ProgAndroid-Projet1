@@ -6,10 +6,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ public class Login extends AppCompatActivity {
         TextView tPseudo = (TextView) findViewById(R.id.username);
         TextView tPassword = (TextView) findViewById(R.id.password);
         MaterialButton loginbtn = (MaterialButton) findViewById(R.id.loginbtn);
+        CheckBox remember = (CheckBox) findViewById(R.id.remember);
 
         //Récupération du bouton pour aller à l'inscription
         MaterialButton goRegisterbtn = (MaterialButton) findViewById(R.id.goRegister);
@@ -124,6 +127,19 @@ public class Login extends AppCompatActivity {
                     else {
                         //Message indiquant à l'utilisateur qu'il est connecté
                         Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
+
+                        //On vérifie si l'utilisateur veut que l'application se rappelle de ses identifiants
+                        //pour le prochain lancement pour se connecter automatiquement
+                        if(remember.isChecked()){
+                            //Si oui, on ajoute les informations de connexion aux préférences
+                            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("pseudo", tPseudo.getText().toString());
+                            editor.putString("password", tPassword.getText().toString());
+                            editor.apply();
+
+                        }
+
                         //On lance la page d'accueil
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);

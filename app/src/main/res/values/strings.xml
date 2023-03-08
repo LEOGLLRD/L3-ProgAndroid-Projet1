@@ -23,6 +23,7 @@
     <string name="errorLoginTitle">Echec de la connexion</string>
     <string name="wrongPasswordOrPseudo">Mauvais mot de passe ou pseudo !</string>
     <string name="connected">Connecté !</string>
+    <string name="remember">S\'en souvenir</string>
 
 
 </resources>
