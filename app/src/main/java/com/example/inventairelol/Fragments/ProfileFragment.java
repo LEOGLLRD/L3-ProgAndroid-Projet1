@@ -10,11 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.inventairelol.Activities.Login;
 import com.example.inventairelol.Activities.MainActivity;
 import com.example.inventairelol.R;
-import com.example.inventairelol.Service.OnlineMYSQL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,6 +55,13 @@ public class ProfileFragment extends Fragment {
         return fragment;
     }
 
+
+
+
+    ImageView imageViewm;
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,24 +69,25 @@ public class ProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         Button button = (Button) view.findViewById(R.id.goProfil);
-
+        imageViewm = (ImageView) view.findViewById(R.id.imageView);
+        Glide.with(this).load("http://ddragon.leagueoflegends.com/cdn/13.4.1/img/profileicon/5719.png").into(imageViewm);
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                //Récupération de la variable de Base de Données
-                MainActivity mainActivity = (MainActivity) getActivity();
                 Intent intent = new Intent(getActivity().getApplicationContext(), Login.class);
                 startActivity(intent);
-
             }
         });
 

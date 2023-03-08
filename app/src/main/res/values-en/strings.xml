@@ -15,10 +15,15 @@
     <string name="home">Home</string>
     <string name="inventory">Inventory</string>
     <string name="profile">Profile</string>
-    <string name="errorRegisterTitle">Registration Failed</string>
-    <string name="emptyPasswordRegister">You cannot have an empty password !</string>
-    <string name="alreadyUsedPseudoOrMailRegister">The mail or the pseudo are already used !</string>
-    <string name="understood">Understood !</string>
+
+
+
+
+
+
+
+
+
 
 
 </resources>
