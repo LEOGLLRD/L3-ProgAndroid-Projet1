@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment {
         TextView textView = (TextView) v.findViewById(R.id.test);
 
         //test d'une requete
-        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo().execute("https://EUW1.api.riotgames.com/lol/summoner/v4/summoners/by-name/FAUNEAUDIN1231?api_key=RGAPI-bd4eddec-3547-4c08-96c9-5dc3c71a1f6a");
+        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo().execute("https://EUW1.api.riotgames.com/lol/summoner/v4/summoners/by-name/FAUNEAUDIN1231?api_key=RGAPI-9db63e4c-1ba9-4992-9022-7a854d2a5754");
 
         try {
             String str = "[" + getMethodDemo.get() + "]";
@@ -95,16 +95,16 @@ public class HomeFragment extends Fragment {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject object = array.getJSONObject(i);
 
-                id = object.getString("id");
-                accountId = object.getString("accountId");
-                puuid = object.getString("puuid");
-                name = object.getString("name");
-                profileIconId = object.getString("profileIconId");
-                summonerLevel = object.getString("summonerLevel");
+                id = object.getString("idRiot");
+                accountId = object.getString("accountIdRiot");
+                puuid = object.getString("puuidRiot");
+                name = object.getString("nameRiot");
+                profileIconId = object.getString("profileIconIdRiot");
+                summonerLevel = object.getString("summonerLevelRiot");
 
 
             }
-            SharedPreferences accountLol = getContext().getSharedPreferences("accountLol", Context.MODE_PRIVATE);
+            SharedPreferences accountLol = getContext().getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = accountLol.edit();
 
             editor.putString("id", id);
