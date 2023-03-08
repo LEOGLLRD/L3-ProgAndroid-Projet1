@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.inventairelol.R;
-import com.example.inventairelol.Service.OnlineMYSQL;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.InputStream;
@@ -24,14 +23,17 @@ import java.util.Properties;
 
 public class Login extends AppCompatActivity {
 
+
     OnlineMYSQL onlineMYSQL;
     String username, url, password;
     Login login = this;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
 
         //Récupération des variables
         TextView tPseudo = (TextView) findViewById(R.id.username);
@@ -39,10 +41,37 @@ public class Login extends AppCompatActivity {
         MaterialButton loginbtn = (MaterialButton) findViewById(R.id.loginbtn);
         CheckBox remember = (CheckBox) findViewById(R.id.remember);
 
-        //Récupération du bouton pour aller à l'inscription
-        MaterialButton goRegisterbtn = (MaterialButton) findViewById(R.id.goRegister);
+        TextView username = (TextView) findViewById(R.id.username);
+        TextView password = (TextView) findViewById(R.id.password);
 
-        //Appelé quand le bouton aller à l'inscription est appelé
+        MaterialButton loginbtn = (MaterialButton) findViewById(R.id.loginbtn);
+
+        //methode pour la connexion
+
+        loginbtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                //a modifier
+                Context context = getApplicationContext();
+                if(username.getText().toString().equals("test")){
+                    CharSequence text = "Connecté!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }else{
+                    CharSequence text = "Echec de la connexion!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+            }
+
+        });
+
+
+        MaterialButton goRegisterbtn = (MaterialButton) findViewById(R.id.goRegister);
         goRegisterbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -2,25 +2,12 @@ package com.example.inventairelol.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.inventairelol.R;
-import com.example.inventairelol.Service.OnlineMYSQL;
-
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Register extends AppCompatActivity {
 
@@ -29,10 +16,13 @@ public class Register extends AppCompatActivity {
     String username, url, password;
     private Register register = this;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        Button button = (Button) findViewById(R.id.goLogin);
 
 
         try {
@@ -65,6 +55,9 @@ public class Register extends AppCompatActivity {
         Button buttonLogin = (Button) findViewById(R.id.goLogin);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
+
+        button.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Register.this, Login.class);
@@ -72,6 +65,7 @@ public class Register extends AppCompatActivity {
                 finish();
             }
         });
+
 
 
         //Gestion Enregistrement

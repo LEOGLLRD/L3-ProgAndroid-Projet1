@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Inventaire LoL</string>
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Bonjour blank fragment</string>
     <string name="btnGoRegister">S\'inscrire</string>
     <string name="noAlreadyRegister">Pas encore inscris ?</string>

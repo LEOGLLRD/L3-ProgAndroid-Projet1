@@ -3,18 +3,11 @@ package com.example.inventairelol.Service;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OnlineMYSQL extends AsyncTask<String, Void, String> {
@@ -33,15 +26,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
 
     }
 
-    ///////////////////////////
-
-    protected OnlineMYSQL(Parcel in) {
-        url = in.readString();
-        user = in.readString();
-        pass = in.readString();
-    }
-
-    //////////////////////////////////
 
     //Méthode appelée avant le processus long
     @Override
@@ -74,13 +58,16 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                 case "connect": {
                     //On se connect à la BDD
                     connect();
+
                     Log.i("connected ?", String.valueOf(isDbConnected()));
                     //Suppression du chargement
                     progressDialog.dismiss();
+
                     break;
                 }
                 //Si regsiter on appel la fonction register
                 case "register": {
+
 
                     //On se connecte à la base de données
                     connect();
@@ -108,7 +95,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                         return "Fail : Mail Empty";
                     }
                     //On vérifie que le pseudo n'est pas vide
-                    if (pseudo.isEmpty()) {
+                    else if (pseudo.isEmpty()) {
                         //Suppression du chargement
                         progressDialog.dismiss();
                         return "Fail : Pseudo Empty";
@@ -127,9 +114,16 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                     }
 
 
+                    String mail = strings[1];
+                    String pseudo = strings[2];
+                    String password = strings[3];
+                    break;
+
+
                 }
                 //Si login appel de la méthode login
                 case "login": {
+
                     connect();
                     if (!isDbConnected()) {
                         progressDialog.dismiss();
@@ -161,6 +155,8 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                         return "Fail : Login Failed";
                     }
 
+                    break;
+
                 }
             }
 
@@ -172,11 +168,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
         return "";
     }
 
-
-    /////////////////////////////
-
-
-    //Tente une connexion avec la base de données
     private boolean connect() {
         try {
 
@@ -193,9 +184,9 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
             });
             //Démarrage du Thread
             t.start();
-            //Si le Thread prend plus de 10sec à se terminer on le kill
+            //Si le Thread prend plus de 10sec à se termniner on le kill
             t.join(10000);
-
+            
             return true;
 
 
@@ -219,6 +210,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
         }
         return isConnected;
     }
+
 
 
     //Méthode qui hash un mot de passe et le retourne
@@ -367,6 +359,5 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
             return true;
         }
     }
-
 
 }

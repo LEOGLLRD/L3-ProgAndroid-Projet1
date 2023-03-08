@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.inventairelol.DataBase.SQLiteBDDHelper;
 import com.example.inventairelol.Fragments.HomeFragment;
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     SQLiteBDDHelper bddHelper;
-    public OnlineMYSQL onlineMYSQL;
+    OnlineMYSQL onlineMYSQL;
     boolean isConnected;
     private static String hostname;
     private static String port;
@@ -64,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
             onlineMYSQL = new OnlineMYSQL(this, url, username, password);
             onlineMYSQL.execute("connect");
 
+
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         //On vérifie si il y a un compte enregistré
         SharedPreferences sharedPreferences = this.getPreferences(MODE_PRIVATE);
         
+
 
         //Pour la barre de naviguation
 
