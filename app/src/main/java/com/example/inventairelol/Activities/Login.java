@@ -131,12 +131,15 @@ public class Login extends AppCompatActivity {
                         //On vérifie si l'utilisateur veut que l'application se rappelle de ses identifiants
                         //pour le prochain lancement pour se connecter automatiquement
                         if(remember.isChecked()){
+                            Log.v("Login Pseudo", tPseudo.getText().toString());
                             //Si oui, on ajoute les informations de connexion aux préférences
-                            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                            SharedPreferences sharedPreferences = getSharedPreferences("user",Login.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("pseudo", tPseudo.getText().toString());
                             editor.putString("password", tPassword.getText().toString());
                             editor.apply();
+
+                            Log.v("Login Pseudo pref", sharedPreferences.getString("pseudo", null));
 
                         }
 
