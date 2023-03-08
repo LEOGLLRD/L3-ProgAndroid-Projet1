@@ -16,9 +16,16 @@
     <string name="inventory">Inventory</string>
     <string name="profile">Profile</string>
     <string name="errorRegisterTitle">Registration Failed</string>
-    <string name="emptyPasswordRegister">You cannot have an empty password !</string>
-    <string name="alreadyUsedPseudoOrMailRegister">The mail or the pseudo are already used !</string>
+    <string name="emptyPassword">Your password cannot be empty !</string>
+    <string name="emptyPseudo">Your pseudo cannot be empty !</string>
+    <string name="emptyMail">Your mail cannot be empty !</string>
+    <string name="alreadyUsedPseudoOrMail">The mail or the pseudo are already used !</string>
     <string name="understood">Understood !</string>
+    <string name="errorMessage">An error occured, try again !</string>
+    <string name="errorLoginTitle">Login Failed</string>
+    <string name="wrongPasswordOrPseudo">Wrong pseudo or password !</string>
+    <string name="connected">Connected !</string>
+
 
 
 </resources>

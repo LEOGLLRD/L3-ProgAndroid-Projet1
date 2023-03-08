@@ -17,7 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class OnlineMYSQL extends AsyncTask<String, Void, String>{
+public class OnlineMYSQL extends AsyncTask<String, Void, String> {
 
     ProgressDialog progressDialog;
 
@@ -57,7 +57,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String>{
     //Méthode appelée après exécution du processus long
     @Override
     protected void onPostExecute(String s) {
-
 
 
     }
@@ -100,24 +99,32 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String>{
                     if (password.isEmpty()) {
                         //Suppression du chargement
                         progressDialog.dismiss();
-                        Log.i("end", "end");
                         return "Fail : Password Empty";
                     }
-                    //On vérifie que le mail et le pseudo ne sont pas utilisés
-                    if (areMailOrPseudoUsed(mail, pseudo)[0] || areMailOrPseudoUsed(mail, pseudo)[1]) {
+                    //On vérifie que le mail n'est pas vide
+                    else if (mail.isEmpty()) {
                         //Suppression du chargement
                         progressDialog.dismiss();
-                        Log.i("end", "end");
+                        return "Fail : Mail Empty";
+                    }
+                    //On vérifie que le pseudo n'est pas vide
+                    if (pseudo.isEmpty()) {
+                        //Suppression du chargement
+                        progressDialog.dismiss();
+                        return "Fail : Pseudo Empty";
+                    }
+                    //On vérifie que le mail et le pseudo ne sont pas utilisés
+                    else if (areMailOrPseudoUsed(mail, pseudo)[0] || areMailOrPseudoUsed(mail, pseudo)[1]) {
+                        //Suppression du chargement
+                        progressDialog.dismiss();
                         return "Fail : Mail or Pseudo already used";
-                    //Pas d'échecs ni d'erreurs
+                        //Pas d'échecs ni d'erreurs
                     } else {
                         register(pseudo, mail, password);
                         //Suppression du chargement
                         progressDialog.dismiss();
-                        Log.i("end", "end");
                         return "Success : Register Done";
                     }
-
 
 
                 }
@@ -125,20 +132,44 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String>{
                 case "login": {
                     connect();
                     if (!isDbConnected()) {
+                        progressDialog.dismiss();
                         return "Error : Not Connected";
                     }
-                    //
+                    //Récupération du pseudo et du password
+                    String pseudo = strings[1];
+                    String password = strings[2];
 
-                    break;
+                    //On vérifie que le password n'est pas vide
+                    if (password.isEmpty()) {
+                        //Suppression du chargement
+                        progressDialog.dismiss();
+                        return "Fail : Password Empty";
+                    }
+                    //On vérifie que le pseudo n'est pas vide
+                    else if (pseudo.isEmpty()) {
+                        //Suppression du chargement
+                        progressDialog.dismiss();
+                        return "Fail : Pseudo Empty";
+                    }
+
+                    //Aucuns des deux n'est vide
+                    else {
+                        progressDialog.dismiss();
+                        if (login(pseudo, password)) {
+                            return "Success : Login Done";
+                        }
+                        return "Fail : Login Failed";
+                    }
+
                 }
             }
 
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "false";
+            return "Error : An Error Occured";
         }
-        return String.valueOf(isDbConnected());
+        return "";
     }
 
 
@@ -227,18 +258,30 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String>{
             //On execute la requête
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                return rs.getString(0);
+                return rs.getString(1);
             }
 
             //Si une erreur à lieu, on retourne un String null
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         return null;
+    }
+
+    public boolean login(String pseudo, String password) {
+
+        try {
+            Log.i("pseudo", pseudo);
+            Log.i("password", password);
+            return checkHash(password, pseudo);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     //Méthode pour l'enregistrement d'un nouvel utilisateur
@@ -273,6 +316,8 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String>{
         return res;
 
     }
+
+
 
     //Méthode retournant un tableau de 2 boolean :
     //le premier nous dis si le mail est déja utilisé

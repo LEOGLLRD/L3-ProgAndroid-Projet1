@@ -83,8 +83,6 @@ public class Register extends AppCompatActivity {
 
                 onlineMYSQL = new OnlineMYSQL(register, url, username, password);
 
-                Log.i("click", "click");
-
                 onlineMYSQL.execute("register", eMail.getText().toString(), ePseudo.getText().toString(), ePassword.getText().toString());
                 try {
 
@@ -92,7 +90,6 @@ public class Register extends AppCompatActivity {
                     //On créer une Alerte pour informer l'utilisateur
                     AlertDialog.Builder builder = new AlertDialog.Builder(Register.this);
                     builder.setTitle(R.string.errorRegisterTitle)
-                            .setMessage(R.string.emptyPasswordRegister)
                             .setCancelable(false)
                             .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
                                 @Override
@@ -102,40 +99,44 @@ public class Register extends AppCompatActivity {
                             });
 
 
-
                     String res = onlineMYSQL.get();
-                    String message = "";
+                    Log.i("res", res);
 
                     //Si on trouve le message Fail
                     if (res.contains("Fail")) {
 
-                        Log.i("matcher", "Fail");
-
                         //On vérifie quel est la cause du Fail
-                        //Si c'est à cause d'un password vide
-                        if (res.contains("Password Empty")) {
-                            builder.setMessage(R.string.emptyPasswordRegister);
+                        //Si c'est à cause d'un mail vide
+                        if (res.contains("Mail Empty")) {
+                            builder.setMessage(R.string.emptyPassword);
+                            builder.show();
                         }
 
+                        //Si c'est à cause d'un password vide
+                        else if (res.contains("Password Empty")) {
+                            builder.setMessage(R.string.emptyPassword);
+                            builder.show();
+                        }
                         //Si c'est à cause d'un password vide
                         else if (res.contains("Mail or Pseudo already used")) {
-                            builder.setMessage(R.string.alreadyUsedPseudoOrMailRegister);
+                            builder.setMessage(R.string.alreadyUsedPseudoOrMail);
+                            builder.show();
                         }
-
-                        builder.show();
                     }
-                    //On voit avec un pattern Regex si on le String de retour contient "Error"
 
+                    //On voit avec un pattern Regex si on le String de retour contient "Error"
                     else if (res.contains("Error")) {
-                        Log.i("matcher", "Error");
+                        builder.setMessage(R.string.errorMessage);
+                        builder.show();
                     }
                     //Pas d'erreurs / echecs dans l'enregistrement
                     else {
-                        Log.i("matcher", "Succes");
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         finish();
                     }
+
+
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
