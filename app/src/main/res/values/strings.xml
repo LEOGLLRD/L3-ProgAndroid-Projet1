@@ -44,6 +44,7 @@
         <item>VN2</item>
     </string-array>
     <string name="selectRegion">Choisir votre région</string>
+    <string name="usernameRiot">Votre pseudo Riot</string>
 
 
 

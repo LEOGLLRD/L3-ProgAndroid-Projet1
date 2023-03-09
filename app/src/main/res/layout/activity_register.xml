@@ -12,7 +12,7 @@
         android:id="@+id/remember2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spinner"
+        android:layout_below="@id/riotUsername"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -25,28 +25,32 @@
         android:id="@+id/register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
         android:text="@string/register"
         android:textColor="@color/white"
         android:textSize="35dp"
-        android:textStyle="bold"
-        android:layout_margin="50dp"
-        android:gravity="center"
-        />
+        android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/mail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/mail"
-        android:background="#30ffffff"
         android:layout_below="@+id/register"
-        android:hint="@string/email"
-        android:textColorHint="@color/white"
-        android:textColor="@color/white"
-        android:layout_margin="10dp"
-        android:padding="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#30ffffff"
         android:drawableLeft="@drawable/baseline_mail_outline_24"
         android:drawablePadding="20dp"
-        />
+        android:hint="@string/email"
+        android:padding="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
 
     <EditText
         android:layout_width="match_parent"
@@ -81,48 +85,41 @@
         android:textColorHint="@color/white" />
 
 
-    <TextView
-        android:id="@+id/region"
-
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/riotUsername"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_below="@id/password"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-
-        android:layout_marginRight="100dp"
-        android:layout_marginBottom="20dp"
-        android:layout_toLeftOf="@+id/spinner"
-
+        android:layout_marginBottom="10dp"
         android:background="#30ffffff"
-
-        android:drawableLeft="@drawable/baseline_location_on_24"
-        android:gravity="center"
-        android:paddingLeft="20dp"
-        android:text="@string/selectRegion"
+        android:drawableLeft="@drawable/baseline_info_24"
+        android:drawablePadding="20dp"
+        android:hint="@string/usernameRiot"
+        android:padding="20dp"
         android:textColor="@color/white"
-        android:textSize="20dp" />
+        android:textColorHint="@color/white" />
 
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
+        android:layout_alignBaseline="@id/riotUsername"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
 
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/riotUsername"
         android:background="#30ffffff"
+
+
         android:entries="@array/region"
         android:padding="20dp"
-
-
-        android:textColor="@color/white"
-        />
+        android:textColor="@color/white" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/registerbtn"
@@ -131,7 +128,6 @@
         android:layout_below="@id/remember2"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:backgroundTint="@color/design_default_color_primary_variant"
@@ -148,6 +144,7 @@
         android:layout_above="@+id/goLogin"
         android:gravity="center"
         />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/goLogin"
         android:layout_width="wrap_content"
@@ -158,6 +155,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:background="@android:color/transparent"
+        android:minHeight="48dp"
         android:text="@string/login" />
 
 
