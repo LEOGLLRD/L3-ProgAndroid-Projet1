@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment {
         TextView textView = (TextView) v.findViewById(R.id.test);
 
         //test d'une requete
-        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo().execute("https://EUW1.api.riotgames.com/lol/summoner/v4/summoners/by-name/FAUNEAUDIN1231?api_key=RGAPI-9db63e4c-1ba9-4992-9022-7a854d2a5754");
+        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo().execute("https://EUW1.api.riotgames.com/lol/summoner/v4/summoners/by-name/FAUNEAUDIN1231?api_key=RGAPI-51fe3aa9-d715-4f54-9df1-56e7b1ce1a19");
 
         try {
             String str = "[" + getMethodDemo.get() + "]";
@@ -95,24 +95,24 @@ public class HomeFragment extends Fragment {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject object = array.getJSONObject(i);
 
-                id = object.getString("idRiot");
-                accountId = object.getString("accountIdRiot");
-                puuid = object.getString("puuidRiot");
-                name = object.getString("nameRiot");
-                profileIconId = object.getString("profileIconIdRiot");
-                summonerLevel = object.getString("summonerLevelRiot");
+                id = object.getString("id");
+                accountId = object.getString("accountId");
+                puuid = object.getString("puuid");
+                name = object.getString("name");
+                profileIconId = object.getString("profileIconId");
+                summonerLevel = object.getString("summonerLevel");
 
 
             }
             SharedPreferences accountLol = getContext().getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = accountLol.edit();
 
-            editor.putString("id", id);
-            editor.putString("accountId", accountId);
-            editor.putString("puuid", puuid);
-            editor.putString("name", name);
-            editor.putString("profileIconId", profileIconId);
-            editor.putString("summonerLevel", summonerLevel);
+            editor.putString("idRiot", id);
+            editor.putString("accountIdRiot", accountId);
+            editor.putString("puuidRiot", puuid);
+            editor.putString("nameRiot", name);
+            editor.putString("profileIconIdRiot", profileIconId);
+            editor.putString("summonerLevelRiot", summonerLevel);
             editor.commit();
             Map<String, String> map = (Map<String, String>) accountLol.getAll();
 
