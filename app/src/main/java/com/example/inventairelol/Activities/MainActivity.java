@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private static String username;
     private static String password;
     private static String url;
-    MainActivity mainActivity = this;
 
 
     @Override
@@ -65,98 +64,146 @@ public class MainActivity extends AppCompatActivity {
             this.password = p.getProperty("password");
             this.url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
 
+
             //Puis instanciation de la variable de connexion et connexion
             onlineMYSQL = new OnlineMYSQL(this, url, username, password);
             onlineMYSQL.execute("connect");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            //On vérifie si il y a un compte enregistré
-            SharedPreferences sharedPreferences = getSharedPreferences("user", MainActivity.MODE_PRIVATE);
+            //On vérifie si il y a un compte enregistré via les préférences
+            SharedPreferences sharedPreferences = this.getSharedPreferences("user", MODE_PRIVATE);
             String pseudo = sharedPreferences.getString("pseudo", "");
-            String password = sharedPreferences.getString("password", "");
+            String pass = sharedPreferences.getString("password", "");
 
-            //Pour la barre de naviguation
-            binding = ActivityMainBinding.inflate(getLayoutInflater());
-            setContentView(binding.getRoot());
+            //Récupération des valeurs via intent
+            //Utilisé quand l'utilisateur ne veut pas que ses identifiants soient enregistrés
+            Bundle extra = this.getIntent().getExtras();
 
-            Log.i("prefPseudo", pseudo);
+            //Si pseudo et password ne sont pas vide alors on essaie de connecter
+            if (!pseudo.equals("") && !pass.equals("")) {
+                onlineMYSQL = new OnlineMYSQL(this, url, username, password);
+                onlineMYSQL.execute("login", pseudo, pass);
 
-            //Si un pseudo et un password avaient été enregistrés
-            if (!pseudo.equals("") && !password.equals("")) {
-                //On essaie alors de connecter l'utilisateur
-                onlineMYSQL = new OnlineMYSQL(this, this.url, this.username, this.password);
-                //Appel de la méthode de login
-                onlineMYSQL.execute("login", pseudo, password);
-                //En attente de la réponse du Service
+                //Recupération de la réponse du Service
                 String res = onlineMYSQL.get();
-                //Si un Fail ou une Error
+
+                //Si fail ou error dans la connexion on renvoie vers la page de connexion
                 if (res.contains("Fail") || res.contains("Error")) {
-                    //On affiche un message que l'auto-login a échoué
+
+                    //On créer une Alerte pour informer l'utilisateur
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle(R.string.errorLoginTitle)
                             .setCancelable(false)
                             .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+
                                     Toast.makeText(getApplicationContext(), R.string.understood, Toast.LENGTH_SHORT).show();
-                                    //On affiche la page de connexion
-                                    Intent intent = new Intent(mainActivity, Login.class);
+                                    //On lance la page de connexion
+                                    Intent intent = new Intent(getApplicationContext(), Login.class);
                                     startActivity(intent);
                                     finish();
                                 }
                             });
-
                     builder.show();
                 }
-                //Sinon succès
+
+                //Sinon succes, on affiche la page d'accueil
                 else {
-                    //On affiche la page d'accueil
+
+                    //On lance la page d'accueil
                     replaceFragment(new HomeFragment());
                 }
             }
-            //Sinon
-            else {
-                //On affiche un message que l'auto-login a échoué
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle(R.string.errorLoginTitle)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getApplicationContext(), R.string.understood, Toast.LENGTH_SHORT).show();
-                                //On affiche la page de connexion
-                                Intent intent = new Intent(mainActivity, Login.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
+            //Sinon on vérifie si on a des valeurs à récupérer via extra
+            else if (extra != null) {
+                String pseudoViaIntent = extra.getString("pseudo");
+                String passwordViaIntent = extra.getString("password");
+                Log.i("intent Pseudo", pseudoViaIntent);
+                Log.i("intent Password", passwordViaIntent);
+                //Si oui on vérifie qu'elles sont bien existantes
+                if (pseudoViaIntent != null && passwordViaIntent != null) {
+                    Log.i("in", "in");
+                    //Si oui on tente la connexion
+                    onlineMYSQL = new OnlineMYSQL(this, url, username, password);
+                    onlineMYSQL.execute("login", pseudoViaIntent, passwordViaIntent);
 
-                builder.show();
+                    //Recupération de la réponse du Service
+                    String res = onlineMYSQL.get();
+
+                    //Si fail ou error dans la connexion on renvoie vers la page de connexion
+                    if (res.contains("Fail") || res.contains("Error")) {
+
+                        //On créer une Alerte pour informer l'utilisateur
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle(R.string.errorLoginTitle)
+                                .setCancelable(false)
+                                .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        Toast.makeText(getApplicationContext(), R.string.understood, Toast.LENGTH_SHORT).show();
+                                        //On lance la page de connexion
+                                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                });
+                        builder.show();
+                    }
+
+                    //Sinon succes, on affiche la page d'accueil
+                    else {
+                        //On lance la page d'accueil
+                        replaceFragment(new HomeFragment());
+                    }
+                }
+                //Si pas de valeurs existantes
+                else {
+                    //On lance la page de connexion
+                    Intent intent = new Intent(getApplicationContext(), Login.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
+
+
+            //Sinon on renvoie vers la page de connexion
+            else {
+                //On lance la page de connexion
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
+                finish();
+            }
+
+
+            //Pour la barre de naviguation
+
+            binding = ActivityMainBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
+            replaceFragment(new HomeFragment());
+
+
+            binding.bottomNavigationView.setOnItemReselectedListener(item -> {
+
+                switch (item.getItemId()) {
+
+                    case R.id.home:
+                        replaceFragment(new HomeFragment());
+                        break;
+                    case R.id.inventory:
+                        replaceFragment(new InventoryFragment());
+                        break;
+                    case R.id.profile:
+                        replaceFragment(new ProfileFragment());
+                        break;
+
+                }
+
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        binding.bottomNavigationView.setOnItemReselectedListener(item -> {
-
-            switch (item.getItemId()) {
-
-                case R.id.home:
-                    replaceFragment(new HomeFragment());
-                    break;
-                case R.id.inventory:
-                    replaceFragment(new InventoryFragment());
-                    break;
-                case R.id.profile:
-                    replaceFragment(new ProfileFragment());
-                    break;
-
-            }
-
-        });
     }
 
     //methode pour remplacer un fragment, avec en parametre le fragment de destination

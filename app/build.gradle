@@ -55,8 +55,6 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:4.11.0"
     annotationProcessor "com.github.bumptech.glide:compiler:4.11.0"
 
-// // https://mvnrepository.com/artifact/org.mindrot.bcrypt/bcrypt
-    implementation 'org.mindrot.bcrypt:bcrypt:0.3'
 
     //for img view circle
     implementation "de.hdodenhof:circleimageview:3.0.0"
