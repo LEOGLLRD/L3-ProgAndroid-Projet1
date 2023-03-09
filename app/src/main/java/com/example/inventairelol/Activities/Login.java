@@ -43,8 +43,6 @@ public class Login extends AppCompatActivity {
         CheckBox remember = (CheckBox) findViewById(R.id.remember);
 
 
-
-
         MaterialButton goRegisterbtn = (MaterialButton) findViewById(R.id.goRegister);
         goRegisterbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,20 +131,39 @@ public class Login extends AppCompatActivity {
 
                         //On vérifie si l'utilisateur veut que l'application se rappelle de ses identifiants
                         //pour le prochain lancement pour se connecter automatiquement
-                        if(remember.isChecked()){
+                        if (remember.isChecked()) {
                             //Si oui, on ajoute les informations de connexion aux préférences
-                            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                            SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("pseudo", tPseudo.getText().toString());
                             editor.putString("password", tPassword.getText().toString());
                             editor.apply();
+                            //Enfin on affiche la page d'accueil
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+
+                        } else {
+                            //Si non, on vide les préférences
+                            SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("pseudo", "");
+                            editor.putString("password", "");
+                            editor.apply();
+
+                            //L'utilisateur ne veut pas que ses identifiants soient enregistrés,
+                            //donc nous allons les passer via intent, à la fermeture de l'application
+                            //ils ne seront pas conservés
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.putExtra("pseudo", tPseudo.getText().toString());
+                            intent.putExtra("password", tPassword.getText().toString());
+                            //On lance la page d'accueil
+                            startActivity(intent);
+                            finish();
+
 
                         }
 
-                        //On lance la page d'accueil
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-                        finish();
 
                     }
 

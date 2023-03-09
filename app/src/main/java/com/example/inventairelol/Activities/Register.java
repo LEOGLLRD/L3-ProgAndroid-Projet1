@@ -2,18 +2,25 @@ package com.example.inventairelol.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.OnlineMYSQL;
 
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 public class Register extends AppCompatActivity {
 
@@ -29,6 +36,7 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         Button button = (Button) findViewById(R.id.goLogin);
+        CheckBox remember = (CheckBox) findViewById(R.id.remember2);
 
 
         try {
@@ -62,10 +70,6 @@ public class Register extends AppCompatActivity {
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View view) {
-
-            }button.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -134,9 +138,44 @@ public class Register extends AppCompatActivity {
                     }
                     //Pas d'erreurs / echecs dans l'enregistrement
                     else {
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        //Message indiquant à l'utilisateur qu'il est connecté
+                        Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
+
+                        //On vérifie si l'utilisateur veut que l'application se rappelle de ses identifiants
+                        //pour le prochain lancement pour se connecter automatiquement
+                        if (remember.isChecked()) {
+                            //Si oui, on ajoute les informations de connexion aux préférences
+                            SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("pseudo", ePseudo.getText().toString());
+                            editor.putString("password", ePassword.getText().toString());
+                            editor.apply();
+                            //Enfin on affiche la page d'accueil
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+
+                        } else {
+                            //Si non, on vide les préférences
+                            SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("pseudo", "");
+                            editor.putString("password", "");
+                            editor.apply();
+
+                            //L'utilisateur ne veut pas que ses identifiants soient enregistrés,
+                            //donc nous allons les passer via intent, à la fermeture de l'application
+                            //ils ne seront pas conservés
+
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.putExtra("pseudo", ePseudo.getText().toString());
+                            intent.putExtra("password", ePassword.getText().toString());
+                            //On lance la page d'accueil
+                            startActivity(intent);
+                            finish();
+
+
+                        }
                     }
 
 

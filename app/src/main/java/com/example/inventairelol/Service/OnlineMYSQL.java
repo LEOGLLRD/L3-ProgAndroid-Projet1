@@ -5,9 +5,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OnlineMYSQL extends AsyncTask<String, Void, String> {
@@ -58,8 +61,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                 case "connect": {
                     //On se connect à la BDD
                     connect();
-
-                    Log.i("connected ?", String.valueOf(isDbConnected()));
                     //Suppression du chargement
                     progressDialog.dismiss();
 
@@ -114,11 +115,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                     }
 
 
-                    String mail = strings[1];
-                    String pseudo = strings[2];
-                    String password = strings[3];
-                    break;
-
 
                 }
                 //Si login appel de la méthode login
@@ -155,8 +151,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                         return "Fail : Login Failed";
                     }
 
-                    break;
-
                 }
             }
 
@@ -171,14 +165,16 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
     private boolean connect() {
         try {
 
-            //Récupération du driver
-            Class.forName("com.mysql.jdbc.Driver");
-
             //Exécution de la connection dans un nouveau Thread
             Thread t = new Thread(() -> {
                 try {
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Log.i("url", url);
                     connection = DriverManager.getConnection(url, user, pass);
+                    Log.i("connected", String.valueOf(isDbConnected()));
                 } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             });
@@ -265,8 +261,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
     public boolean login(String pseudo, String password) {
 
         try {
-            Log.i("pseudo", pseudo);
-            Log.i("password", password);
             return checkHash(password, pseudo);
 
         } catch (Exception e) {
@@ -285,11 +279,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
 
             //On prépare la requête
             PreparedStatement stmt = connection.prepareStatement("insert into user (mail, pseudo, password) values (?,?,?)");
-
-            Log.i("mail", mail);
-            Log.i("pseudo", pseudo);
-            Log.i("pass", password);
-
             //On ajoute les paramètres
             stmt.setString(1, mail);
             stmt.setString(2, pseudo);
