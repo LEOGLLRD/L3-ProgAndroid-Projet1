@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment {
         TextView textView = (TextView) v.findViewById(R.id.test);
 
         //test d'une requete
-        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo().execute("https://EUW1.api.riotgames.com/lol/summoner/v4/summoners/by-name/FAUNEAUDIN1231?api_key=RGAPI-51fe3aa9-d715-4f54-9df1-56e7b1ce1a19");
+        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo().execute("https://EUW1.api.riotgames.com/lol/summoner/v4/summoners/by-name/FAUNEAUDIN1231?api_key=RGAPI-fba3325a-77be-400b-87e7-06257d5d23f1");
 
         try {
             String str = "[" + getMethodDemo.get() + "]";
@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment {
             editor.putString("nameRiot", name);
             editor.putString("profileIconIdRiot", profileIconId);
             editor.putString("summonerLevelRiot", summonerLevel);
-            editor.commit();
+            editor.apply();
             Map<String, String> map = (Map<String, String>) accountLol.getAll();
 
 

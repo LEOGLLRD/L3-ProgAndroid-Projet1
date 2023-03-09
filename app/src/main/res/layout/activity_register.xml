@@ -8,6 +8,19 @@
     tools:context=".Activities.Register">
 
 
+    <CheckBox
+        android:id="@+id/remember2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center|center_horizontal"
+        android:text="@string/remember"
+        android:textColor="@color/white"
+        tools:visibility="visible" />
+
     <TextView
         android:id="@+id/register"
         android:layout_width="match_parent"
@@ -51,40 +64,71 @@
         />
 
     <EditText
+        android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/password"
-        android:background="#30ffffff"
         android:layout_below="@+id/pseudo"
-        android:hint="@string/Password"
-        android:textColorHint="@color/white"
-        android:textColor="@color/white"
-        android:layout_margin="10dp"
-        android:padding="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#30ffffff"
         android:drawableLeft="@drawable/baseline_info_24"
         android:drawablePadding="20dp"
-        />
+        android:hint="@string/Password"
+        android:padding="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/filechooser"
+
+    <TextView
+        android:id="@+id/region"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
+        android:layout_below="@id/password"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toLeftOf="@+id/spinner"
+
+        android:background="#30ffffff"
+
+        android:drawableLeft="@drawable/baseline_location_on_24"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:text="@string/selectRegion"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/password"
-        android:layout_margin="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+
+        android:background="#30ffffff"
+        android:entries="@array/region"
         android:padding="20dp"
-        android:drawablePadding="20dp"
-        android:backgroundTint="#30ffffff"
-        android:text="@string/chooseFile"
-        android:drawableLeft="@drawable/baseline_image_search_24"
 
+
+        android:textColor="@color/white"
         />
-
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/registerbtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/filechooser"
+        android:layout_below="@id/remember2"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
@@ -115,6 +159,8 @@
         android:layout_marginBottom="20dp"
         android:background="@android:color/transparent"
         android:text="@string/login" />
+
+
 
 
 </RelativeLayout>
