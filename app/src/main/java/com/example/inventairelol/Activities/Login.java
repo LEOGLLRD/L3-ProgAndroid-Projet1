@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.inventairelol.R;
+import com.example.inventairelol.Service.OnlineMYSQL;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.InputStream;
@@ -41,34 +42,7 @@ public class Login extends AppCompatActivity {
         MaterialButton loginbtn = (MaterialButton) findViewById(R.id.loginbtn);
         CheckBox remember = (CheckBox) findViewById(R.id.remember);
 
-        TextView username = (TextView) findViewById(R.id.username);
-        TextView password = (TextView) findViewById(R.id.password);
 
-        MaterialButton loginbtn = (MaterialButton) findViewById(R.id.loginbtn);
-
-        //methode pour la connexion
-
-        loginbtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                //a modifier
-                Context context = getApplicationContext();
-                if(username.getText().toString().equals("test")){
-                    CharSequence text = "Connecté!";
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                }else{
-                    CharSequence text = "Echec de la connexion!";
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                }
-            }
-
-        });
 
 
         MaterialButton goRegisterbtn = (MaterialButton) findViewById(R.id.goRegister);
