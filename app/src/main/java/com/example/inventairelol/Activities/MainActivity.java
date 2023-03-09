@@ -6,14 +6,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.inventairelol.DataBase.SQLiteBDDHelper;
 import com.example.inventairelol.Fragments.HomeFragment;
@@ -41,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private static String username;
     private static String password;
     private static String url;
-    MainActivity mainActivity = this;
 
 
     @Override
@@ -69,80 +63,29 @@ public class MainActivity extends AppCompatActivity {
             onlineMYSQL = new OnlineMYSQL(this, url, username, password);
             onlineMYSQL.execute("connect");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            //On vérifie si il y a un compte enregistré
-            SharedPreferences sharedPreferences = getSharedPreferences("user", MainActivity.MODE_PRIVATE);
-            String pseudo = sharedPreferences.getString("pseudo", "");
-            String password = sharedPreferences.getString("password", "");
 
-            //Pour la barre de naviguation
-            binding = ActivityMainBinding.inflate(getLayoutInflater());
-            setContentView(binding.getRoot());
 
-            Log.i("prefPseudo", pseudo);
 
-            //Si un pseudo et un password avaient été enregistrés
-            if (!pseudo.equals("") && !password.equals("")) {
-                //On essaie alors de connecter l'utilisateur
-                onlineMYSQL = new OnlineMYSQL(this, this.url, this.username, this.password);
-                //Appel de la méthode de login
-                onlineMYSQL.execute("login", pseudo, password);
-                //En attente de la réponse du Service
-                String res = onlineMYSQL.get();
-                //Si un Fail ou une Error
-                if (res.contains("Fail") || res.contains("Error")) {
-                    //On affiche un message que l'auto-login a échoué
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle(R.string.errorLoginTitle)
-                            .setCancelable(false)
-                            .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Toast.makeText(getApplicationContext(), R.string.understood, Toast.LENGTH_SHORT).show();
-                                    //On affiche la page de connexion
-                                    Intent intent = new Intent(mainActivity, Login.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            });
-
-                    builder.show();
-                }
-                //Sinon succès
-                else {
-                    //On affiche la page d'accueil
-                    replaceFragment(new HomeFragment());
-                }
-            }
-            //Sinon
-            else {
-                //On affiche un message que l'auto-login a échoué
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle(R.string.errorLoginTitle)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getApplicationContext(), R.string.understood, Toast.LENGTH_SHORT).show();
-                                //On affiche la page de connexion
-                                Intent intent = new Intent(mainActivity, Login.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-
-                builder.show();
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //On vérifie si il y a un compte enregistré
+        SharedPreferences sharedPreferences = this.getPreferences(MODE_PRIVATE);
+        
+
+
+        //Pour la barre de naviguation
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        replaceFragment(new HomeFragment());
+
+
         binding.bottomNavigationView.setOnItemReselectedListener(item -> {
 
-            switch (item.getItemId()) {
+            switch (item.getItemId()){
 
                 case R.id.home:
                     replaceFragment(new HomeFragment());
@@ -160,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //methode pour remplacer un fragment, avec en parametre le fragment de destination
-    private void replaceFragment(Fragment fragment) {
+    private void replaceFragment(Fragment fragment){
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

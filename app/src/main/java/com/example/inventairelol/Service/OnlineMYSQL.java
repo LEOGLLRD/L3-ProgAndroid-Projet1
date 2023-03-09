@@ -5,12 +5,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OnlineMYSQL extends AsyncTask<String, Void, String> {
@@ -116,6 +113,13 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                         return "Success : Register Done";
                     }
 
+
+                    String mail = strings[1];
+                    String pseudo = strings[2];
+                    String password = strings[3];
+                    break;
+
+
                 }
                 //Si login appel de la méthode login
                 case "login": {
@@ -151,6 +155,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                         return "Fail : Login Failed";
                     }
 
+                    break;
 
                 }
             }
