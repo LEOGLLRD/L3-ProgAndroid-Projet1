@@ -13,12 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.OnlineMYSQL;
 
 import java.io.InputStream;
 import java.util.Properties;
+
 import java.util.concurrent.ExecutionException;
+
 
 public class Register extends AppCompatActivity {
 
@@ -63,7 +66,9 @@ public class Register extends AppCompatActivity {
         Button buttonLogin = (Button) findViewById(R.id.goLogin);
 
 
+
         buttonLogin.setOnClickListener(new View.OnClickListener() {
+
 
             @Override
             public void onClick(View view) {
