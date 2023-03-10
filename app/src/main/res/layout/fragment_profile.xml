@@ -41,24 +41,28 @@
         android:layout_width="149dp"
         android:layout_height="149dp"
         android:layout_above="@+id/textViewSimple"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="239dp"
-        android:layout_marginBottom="105dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="255dp"
+        android:layout_marginBottom="111dp"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/goLogin"
-        android:layout_width="wrap_content"
+        android:id="@+id/goRegister"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
+        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="156dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginBottom="129dp"
-        android:textColor="@color/black"
         android:background="@android:color/transparent"
-        android:text="@string/register" />
+        android:text="@string/register"
+        android:textColor="@color/black" />
 </RelativeLayout>

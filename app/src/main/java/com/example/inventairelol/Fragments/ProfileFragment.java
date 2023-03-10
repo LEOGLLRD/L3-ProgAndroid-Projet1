@@ -1,6 +1,8 @@
 package com.example.inventairelol.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.inventairelol.Activities.Login;
 import com.example.inventairelol.Activities.MainActivity;
+import com.example.inventairelol.Activities.Register;
 import com.example.inventairelol.R;
 
 /**
@@ -82,20 +85,39 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         //Pour gerer l'img
-        Button button = (Button) view.findViewById(R.id.goProfil);
         imageViewm = (ImageView) view.findViewById(R.id.imageView);
 
         //Pour gerer le text
         TextView textView =(TextView) view.findViewById(R.id.textViewSimple);
 
+        //Pour gerer les boutton
+        Button button = (Button) view.findViewById(R.id.goProfil);
+        Button buttonGoregister = (Button) view.findViewById(R.id.goRegister);
+
+        //Vérification de la création d'une variable de connexion
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
+        String isConnected = sharedPreferences.getString("connected", "false");
+
         //si l'utilisateur n'est pas connecté:
-
+        String urlImg ;
+        if(isConnected .equals("true")){
+             urlImg = "http://ddragon.leagueoflegends.com/cdn/13.4.1/img/profileicon/5719.png";
+        }else{
+            urlImg ="https://militaryhealthinstitute.org/wp-content/uploads/sites/37/2021/08/blank-profile-picture-png.png";
+        }
         textView.setText(R.string.noConnected);https:
-        Glide.with(this).load("https://militaryhealthinstitute.org/wp-content/uploads/sites/37/2021/08/blank-profile-picture-png.png").into(imageViewm);
-
-        //Glide.with(this).load("http://ddragon.leagueoflegends.com/cdn/13.4.1/img/profileicon/5719.png").into(imageViewm);
+        Glide.with(this).load(urlImg).into(imageViewm);
 
 
+
+
+        buttonGoregister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), Register.class);
+                startActivity(intent);
+            }
+        });
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), Login.class);
