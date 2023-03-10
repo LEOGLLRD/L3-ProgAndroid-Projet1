@@ -45,6 +45,9 @@
         <item>VN2</item>
     </string-array>
     <string name="selectRegion">Choose your region</string>
+
+    <string name="usernameRiot">Your Riot username</string>
+
     <string name="noConnected">You are not connected</string>
 
 

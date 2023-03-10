@@ -104,6 +104,8 @@ public class HomeFragment extends Fragment {
 
 
             }
+
+            //Récupération des préférences
             SharedPreferences accountLol = getContext().getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = accountLol.edit();
 
