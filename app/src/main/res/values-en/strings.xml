@@ -45,6 +45,7 @@
         <item>VN2</item>
     </string-array>
     <string name="selectRegion">Choose your region</string>
+    <string name="invited">Continue as guest </string>
 
     <string name="usernameRiot">Your Riot username</string>
 
