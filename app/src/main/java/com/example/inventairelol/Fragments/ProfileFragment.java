@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.inventairelol.Activities.Login;
@@ -80,9 +81,20 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        //Pour gerer l'img
         Button button = (Button) view.findViewById(R.id.goProfil);
         imageViewm = (ImageView) view.findViewById(R.id.imageView);
-        Glide.with(this).load("http://ddragon.leagueoflegends.com/cdn/13.4.1/img/profileicon/5719.png").into(imageViewm);
+
+        //Pour gerer le text
+        TextView textView =(TextView) view.findViewById(R.id.textViewSimple);
+
+        //si l'utilisateur n'est pas connecté:
+
+        textView.setText(R.string.noConnected);https:
+        Glide.with(this).load("https://militaryhealthinstitute.org/wp-content/uploads/sites/37/2021/08/blank-profile-picture-png.png").into(imageViewm);
+
+        //Glide.with(this).load("http://ddragon.leagueoflegends.com/cdn/13.4.1/img/profileicon/5719.png").into(imageViewm);
+
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {

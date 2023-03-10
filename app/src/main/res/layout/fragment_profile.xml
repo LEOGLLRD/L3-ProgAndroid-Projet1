@@ -4,20 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/design_default_color_primary_variant"
+    android:background="#D3D3D3"
     tools:context=".Fragments.ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/textViewSimple"
+        android:layout_width="match_parent"
+        android:layout_height="105dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center"
-        android:layout_marginEnd="101dp"
-        android:layout_marginBottom="233dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="340dp"
+        android:gravity="center"
         android:text="Profile Fragment"
         android:textSize="26dp" />
 
@@ -28,19 +30,35 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="132dp"
-        android:layout_marginEnd="130dp"
-        android:layout_marginBottom="110dp"
+        android:layout_marginStart="129dp"
+        android:layout_marginEnd="133dp"
+        android:layout_marginBottom="193dp"
         android:text="@string/login" />
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
-        android:layout_width="166dp"
-        android:layout_height="164dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="336dp"
+        android:layout_width="149dp"
+        android:layout_height="149dp"
+        android:layout_above="@+id/textViewSimple"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="239dp"
+        android:layout_marginBottom="105dp"
         app:civ_border_color="#FF000000"
-        app:civ_border_width="4dp"
-        tools:src="@tools:sample/avatars" />
+        app:civ_border_width="2dp" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/goLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="156dp"
+        android:layout_marginBottom="129dp"
+        android:textColor="@color/black"
+        android:background="@android:color/transparent"
+        android:text="@string/register" />
 </RelativeLayout>
