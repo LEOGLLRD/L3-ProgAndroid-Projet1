@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment {
         TextView textView = (TextView) v.findViewById(R.id.test);
 
         //test d'une requete
-        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo().execute("https://EUW1.api.riotgames.com/lol/summoner/v4/summoners/by-name/FAUNEAUDIN1231?api_key=RGAPI-fba3325a-77be-400b-87e7-06257d5d23f1");
+        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo().execute("https://EUW1.api.riotgames.com/lol/summoner/v4/summoners/by-name/MONSIEUR Méchant?api_key=RGAPI-fba3325a-77be-400b-87e7-06257d5d23f1");
 
         try {
             String str = "[" + getMethodDemo.get() + "]";
