@@ -109,7 +109,10 @@ public class MainActivity extends AppCompatActivity {
 
                 //Sinon succes, on affiche la page d'accueil
                 else {
-
+                    //On ajoute une variable qui précise que l'utilisateur est connecté
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("connected", "true");
+                    editor.apply();
                     //On lance la page d'accueil
                     replaceFragment(new HomeFragment());
                 }
@@ -153,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
 
                     //Sinon succes, on affiche la page d'accueil
                     else {
+                        //On ajoute une variable qui précise que l'utilisateur est connecté
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("connected", "true");
+                        editor.apply();
                         //On lance la page d'accueil
                         replaceFragment(new HomeFragment());
                     }
