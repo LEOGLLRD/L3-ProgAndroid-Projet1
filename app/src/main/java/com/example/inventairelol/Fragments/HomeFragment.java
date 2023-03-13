@@ -81,8 +81,10 @@ public class HomeFragment extends Fragment {
 
         TextView textView = (TextView) v.findViewById(R.id.test);
 
+
         //Récupération des infos de l'utilisateur
         GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", "EUW1", "LLEOXE");
+
 
         try {
             String res = getMethodDemo.get();
