@@ -15,3 +15,12 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+Pour que l'application fonctionne, il faut ajouter via Android Studio un dossier asset qui contient un fichier config.properties.
+Ce fichier contient les informations pour la connexion à la base de données en ligne.
+Structure du fichier : 
+
+hostname=***************
+port=****
+database=****************
+username=****************
+password=********
