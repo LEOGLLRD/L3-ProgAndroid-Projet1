@@ -126,18 +126,21 @@ public class Login extends AppCompatActivity {
                     }
                     //Pas d'erreurs / d'echecs dans la connexion
                     else {
-                        //Message indiquant à l'utilisateur qu'il est connecté
-                        Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
+
 
                         //On vérifie si l'utilisateur veut que l'application se rappelle de ses identifiants
                         //pour le prochain lancement pour se connecter automatiquement
                         if (remember.isChecked()) {
+
                             //Si oui, on ajoute les informations de connexion aux préférences
                             SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("pseudo", tPseudo.getText().toString());
                             editor.putString("password", tPassword.getText().toString());
                             editor.apply();
+
+                            //Message indiquant à l'utilisateur qu'il est connecté
+                            Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
                             //Enfin on affiche la page d'accueil
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
@@ -151,12 +154,17 @@ public class Login extends AppCompatActivity {
                             editor.putString("password", "");
                             editor.apply();
 
+                            //Message indiquant à l'utilisateur qu'il est connecté
+                            Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
+
                             //L'utilisateur ne veut pas que ses identifiants soient enregistrés,
                             //donc nous allons les passer via intent, à la fermeture de l'application
                             //ils ne seront pas conservés
+
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             intent.putExtra("pseudo", tPseudo.getText().toString());
                             intent.putExtra("password", tPassword.getText().toString());
+
                             //On lance la page d'accueil
                             startActivity(intent);
                             finish();

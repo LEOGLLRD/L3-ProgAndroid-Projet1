@@ -81,47 +81,49 @@ public class HomeFragment extends Fragment {
 
         TextView textView = (TextView) v.findViewById(R.id.test);
 
-        //test d'une requete
-        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo().execute("https://EUW1.api.riotgames.com/lol/summoner/v4/summoners/by-name/FAUNEAUDIN1231?api_key=RGAPI-fba3325a-77be-400b-87e7-06257d5d23f1");
+        //Récupération des infos de l'utilisateur
+        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", "EUW1", "LLEOXE");
 
         try {
-            String str = "[" + getMethodDemo.get() + "]";
-            // test.replaceAll("\"", "\\" + "\"" );
-            //ArrayList<String> arrayList = jsonStringToArray(test);
-            JSONArray array = new JSONArray(str);
-            Log.v("array", array.toString());
+            String res = getMethodDemo.get();
+            if (res.contains("Error :") || res.contains("Fail :")) {
 
-            String id = null, accountId = null, puuid = null, name = null, profileIconId = null, summonerLevel = null;
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
+            } else {
+                String str = "[" + res + "]";
+                JSONArray array = new JSONArray(str);
+                Log.v("array", array.toString());
 
-                id = object.getString("id");
-                accountId = object.getString("accountId");
-                puuid = object.getString("puuid");
-                name = object.getString("name");
-                profileIconId = object.getString("profileIconId");
-                summonerLevel = object.getString("summonerLevel");
+                String id = null, accountId = null, puuid = null, name = null, profileIconId = null, summonerLevel = null;
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.getJSONObject(i);
 
+                    id = object.getString("id");
+                    accountId = object.getString("accountId");
+                    puuid = object.getString("puuid");
+                    name = object.getString("name");
+                    profileIconId = object.getString("profileIconId");
+                    summonerLevel = object.getString("summonerLevel");
+
+
+                }
+
+                //Récupération des préférences
+                SharedPreferences accountLol = getContext().getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = accountLol.edit();
+
+                editor.putString("idRiot", id);
+                editor.putString("accountIdRiot", accountId);
+                editor.putString("puuidRiot", puuid);
+                editor.putString("nameRiot", name);
+                editor.putString("profileIconIdRiot", profileIconId);
+                editor.putString("summonerLevelRiot", summonerLevel);
+                editor.apply();
+                Map<String, String> map = (Map<String, String>) accountLol.getAll();
+
+
+                textView.setText(map.get("name"));
 
             }
-
-            //Récupération des préférences
-            SharedPreferences accountLol = getContext().getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = accountLol.edit();
-
-            editor.putString("idRiot", id);
-            editor.putString("accountIdRiot", accountId);
-            editor.putString("puuidRiot", puuid);
-            editor.putString("nameRiot", name);
-            editor.putString("profileIconIdRiot", profileIconId);
-            editor.putString("summonerLevelRiot", summonerLevel);
-            editor.apply();
-            Map<String, String> map = (Map<String, String>) accountLol.getAll();
-
-
-            textView.setText(map.get("name"));
-
-
         } catch (InterruptedException | ExecutionException | JSONException e) {
             throw new RuntimeException(e);
         }
