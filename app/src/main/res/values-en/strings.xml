@@ -50,7 +50,12 @@
     <string name="usernameRiot">Your Riot username</string>
 
     <string name="noConnected">You are not connected</string>
-
+    <string name="lang">en_US</string>
+    <string name="loading">Loading ...</string>
+    <string name="waitingForServer">Waiting for server ...</string>
+    <string name="riotAccountDoesntExist">No account found,\nCheck out the username and the region</string>
+    <string name="riotAccountEmpty">You didn\'t fill your Riot account </string>
+    <string name="riotAccountAlreadyLinked">This account is already linked to another user </string>
 
 
 </resources>

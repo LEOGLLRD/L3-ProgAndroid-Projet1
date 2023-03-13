@@ -82,6 +82,8 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                     String mail = strings[1];
                     String pseudo = strings[2];
                     String password = strings[3];
+                    String riotUsername = strings[4];
+                    String region = strings[5];
 
                     //On vérifie que le password n'est pas vide
                     if (password.isEmpty()) {
@@ -106,14 +108,21 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                         //Suppression du chargement
                         progressDialog.dismiss();
                         return "Fail : Mail or Pseudo already used";
-                        //Pas d'échecs ni d'erreurs
-                    } else {
-                        register(pseudo, mail, password);
+
+                    }
+                    //On vérifie que l'username Riot n'est pas déjà relié à un autre compte
+                    else if (isRiotUsernameAlreadyLinked(riotUsername, region)) {
+                        //Suppression du chargement
+                        progressDialog.dismiss();
+                        return "Fail : Riot account already linked to another user";
+                    }
+                    //Pas d'échecs ni d'erreurs
+                    else {
+                        register(pseudo, mail, password, riotUsername, region);
                         //Suppression du chargement
                         progressDialog.dismiss();
                         return "Success : Register Done";
                     }
-
 
 
                 }
@@ -152,14 +161,21 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                     }
 
                 }
+                default: {
+                    progressDialog.dismiss();
+                    return "Error : An Error Occured";
+                }
             }
 
 
         } catch (Exception e) {
             e.printStackTrace();
+            //Suppression du chargement
+            progressDialog.dismiss();
             return "Error : An Error Occured";
         }
-        return "";
+        progressDialog.dismiss();
+        return "Error : An Error Occured";
     }
 
     private boolean connect() {
@@ -182,7 +198,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
             t.start();
             //Si le Thread prend plus de 10sec à se termniner on le kill
             t.join(10000);
-            
+
             return true;
 
 
@@ -206,7 +222,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
         }
         return isConnected;
     }
-
 
 
     //Méthode qui hash un mot de passe et le retourne
@@ -258,6 +273,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
         return null;
     }
 
+    //Méthode de login, retourne vrai si succès, faux sinon
     public boolean login(String pseudo, String password) {
 
         try {
@@ -271,18 +287,20 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
     }
 
     //Méthode pour l'enregistrement d'un nouvel utilisateur
-    public int register(String pseudo, String mail, String password) {
+    public int register(String pseudo, String mail, String password, String riotUsername, String region) {
 
         int res = 0;
 
         try {
 
             //On prépare la requête
-            PreparedStatement stmt = connection.prepareStatement("insert into user (mail, pseudo, password) values (?,?,?)");
+            PreparedStatement stmt = connection.prepareStatement("insert into user (mail, pseudo, password, usernameRiot, region ) values (?,?,?,?,?)");
             //On ajoute les paramètres
             stmt.setString(1, mail);
             stmt.setString(2, pseudo);
             stmt.setString(3, hash(password));
+            stmt.setString(4, riotUsername);
+            stmt.setString(5, region);
             //On execute la requête
             res = stmt.executeUpdate();
 
@@ -297,7 +315,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
         return res;
 
     }
-
 
 
     //Méthode retournant un tableau de 2 boolean :
@@ -346,6 +363,62 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
         } catch (Exception e) {
             e.printStackTrace();
             return true;
+        }
+    }
+
+    public boolean isRiotUsernameAlreadyLinked(String username, String region) {
+
+        try {
+            //On prépare la requête
+            PreparedStatement stmt = connection.prepareStatement("select pseudo from user where usernameRiot = ? and region = ?");
+            //On ajoute l'username à la requête
+            stmt.setString(1, username);
+            stmt.setString(2, region);
+            //On execute la requête
+            ResultSet rs = stmt.executeQuery();
+            //Si on a un résultat alors l'username est déjà utilisé
+            //On retourne vrai
+            if (rs.next()) return true;
+                //Sinon faux
+            else return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+
+    }
+
+    //Méthode retournant le nom Riot, et la région en fonction du Pseudo
+    //L'username et la région seront séparés par une virgule.
+    //Exemple : USERNAME,REGION
+    //Si pas de résultat trouvé ou erreur,
+    //retourne un string vide : ""
+    public String getRiotUsernameAndRegionFromPseudo(String pseudo) {
+        try {
+            //On prépare la requête
+            PreparedStatement stmt = connection.prepareStatement("select usernameRiot, Region from user where pseudo = ?");
+            //On ajoute le pseudo à la requête
+            stmt.setString(1, pseudo);
+            //On execute la requête
+            ResultSet rs = stmt.executeQuery();
+            String usernameRiot, region;
+            //Si on a un resultat
+            if (rs.next()) {
+                //On récupère l'username
+                usernameRiot = rs.getString(1);
+                //On recupère la région
+                region = rs.getString(2);
+                //On formate, et on retourne
+                return usernameRiot + "," + region;
+            }
+            //Sinon on retourne un champ vide
+            else return "";
+
+        }
+        //Si erreur, on retourne un champ vide
+        catch (Exception e) {
+            e.printStackTrace();
+            return "";
         }
     }
 
