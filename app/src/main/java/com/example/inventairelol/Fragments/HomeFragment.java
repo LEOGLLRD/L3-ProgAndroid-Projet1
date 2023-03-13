@@ -1,7 +1,11 @@
 package com.example.inventairelol.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.GetMethodDemo;
+import com.example.inventairelol.Service.OnlineMYSQL;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,8 +26,12 @@ import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -31,6 +40,8 @@ import java.util.concurrent.ExecutionException;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+
+    String username, url, hostname, password, port, database;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,12 +92,71 @@ public class HomeFragment extends Fragment {
 
         TextView textView = (TextView) v.findViewById(R.id.test);
 
-
-        //Récupération des infos de l'utilisateur
-        GetMethodDemo getMethodDemo = (GetMethodDemo) new GetMethodDemo(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", "EUW1", "LLEOXE");
-
-
         try {
+
+            //Récupération du fichier de configuration de la base de données
+            Properties p = new Properties();
+            AssetManager assetManager = getActivity().getAssets();
+            InputStream inputStream = assetManager.open("config.properties");
+            p.load(inputStream);
+
+            //Récupération des paramétres de configurations de la base de données via le fichier config
+            this.hostname = p.getProperty("hostname");
+            this.port = p.getProperty("port");
+            this.database = p.getProperty("database");
+            this.username = p.getProperty("username");
+            this.password = p.getProperty("password");
+            this.url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
+
+
+            //Vérification si le pseudo est passé via intent ou preferences
+            GetMethodDemo getMethodDemo;
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", MODE_PRIVATE);
+            String pseudo = sharedPreferences.getString("pseudo", "");
+            if (!pseudo.equals("")) {
+                String usernameRiot = "", region = "";
+                OnlineMYSQL onlineMYSQL = new OnlineMYSQL(getActivity(), url, username, password);
+                onlineMYSQL.execute("getRiotUsernameAndRegion", pseudo);
+                String res = onlineMYSQL.get();
+                Log.i("res", res);
+
+                if (res == null) {
+
+                } else {
+                    String[] split = res.split(",");
+                    usernameRiot = split[0];
+                    region = split[1];
+                }
+                //Récupération des infos de l'utilisateur
+                getMethodDemo = (GetMethodDemo) new GetMethodDemo(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
+            }
+            //Rien via preference, mais via intent
+            else {
+                Intent intent = getActivity().getIntent();
+                Bundle extra = intent.getExtras();
+                String usernameRiot = "", region = "";
+                if (extra != null) {
+                    pseudo = extra.getString("pseudo");
+                    OnlineMYSQL onlineMYSQL = new OnlineMYSQL(getActivity(), url, username, password);
+                    onlineMYSQL.execute("getRiotUsernameAndRegion", pseudo);
+                    String res = onlineMYSQL.get();
+                    if (res == null) {
+
+                    } else {
+                        String[] split = res.split(",");
+                        usernameRiot = split[0];
+                        region = split[1];
+                    }
+                    //Récupération des infos de l'utilisateur
+                    getMethodDemo = (GetMethodDemo) new GetMethodDemo(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
+                }
+                //Récupération des infos de l'utilisateur
+                getMethodDemo = (GetMethodDemo) new GetMethodDemo(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
+
+
+            }
+
+
             String res = getMethodDemo.get();
             if (res.contains("Error :") || res.contains("Fail :")) {
 
@@ -110,7 +180,7 @@ public class HomeFragment extends Fragment {
                 }
 
                 //Récupération des préférences
-                SharedPreferences accountLol = getContext().getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
+                SharedPreferences accountLol = getContext().getSharedPreferences("accountLolRiot", MODE_PRIVATE);
                 SharedPreferences.Editor editor = accountLol.edit();
 
                 editor.putString("idRiot", id);
@@ -127,6 +197,8 @@ public class HomeFragment extends Fragment {
 
             }
         } catch (InterruptedException | ExecutionException | JSONException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return v;
