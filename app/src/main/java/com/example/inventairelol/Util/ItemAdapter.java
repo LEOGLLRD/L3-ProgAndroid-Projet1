@@ -61,7 +61,6 @@ public class ItemAdapter extends BaseAdapter {
             nameItem.setText(item.getName());
             imgItem = view.findViewById(R.id.imgItem);
             String urlImg = "https://ddragon.leagueoflegends.com/cdn/" + version + "/img/item/" + item.getUrlImg();
-            Log.v("urlImg", urlImg);
             Glide.with(context).load(urlImg).into(imgItem);
 
         } catch (Exception e) {

@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment {
                     region = split[1];
                 }
                 //Récupération des infos de l'utilisateur
-                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
+                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-135c1e76-3a3e-48a2-aaa5-08666b8d2cc5", region, usernameRiot);
             }
             //Rien via preference, mais via intent
             else {
@@ -153,10 +153,10 @@ public class HomeFragment extends Fragment {
                         region = split[1];
                     }
                     //Récupération des infos de l'utilisateur
-                    apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
+                    apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-135c1e76-3a3e-48a2-aaa5-08666b8d2cc5", region, usernameRiot);
                 }
                 //Récupération des infos de l'utilisateur
-                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
+                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-135c1e76-3a3e-48a2-aaa5-08666b8d2cc5", region, usernameRiot);
 
 
             }
@@ -203,11 +203,12 @@ public class HomeFragment extends Fragment {
             //Création du tableau de tous les champions
 
             apiLoL = new ApiLoL(this.getContext());
-            apiLoL.execute("getAllChampInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", "EUW1");
+            apiLoL.execute("getAllChampInfo", "RGAPI-135c1e76-3a3e-48a2-aaa5-08666b8d2cc5", "EUW1");
 
             ArrayList<Champion> champs = new ArrayList<Champion>();
             //On récupère le json des champion
             String res2 = apiLoL.get();
+            Log.i("res2", res2);
 
             //On convertit le string en json
             JSONObject jsonObject = new JSONObject(res2);
@@ -228,7 +229,7 @@ public class HomeFragment extends Fragment {
             //Création du tableau de tous les items
 
             apiLoL = new ApiLoL(this.getContext());
-            apiLoL.execute("getAllItemInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", "EUW1");
+            apiLoL.execute("getAllItemInfo", "RGAPI-135c1e76-3a3e-48a2-aaa5-08666b8d2cc5", "EUW1");
 
             ArrayList<Item> items = new ArrayList<Item>();
             //On récupère le json des items
@@ -243,7 +244,8 @@ public class HomeFragment extends Fragment {
             //On itère et on créer un objet Item par item
             for (Iterator<String> it = data.keys(); it.hasNext(); ) {
                 String key = it.next();
-                items.add(new Item(key.toString(), key.toString() + ".png"));
+                JSONObject infoItem = data.getJSONObject(key);
+                items.add(new Item(infoItem.getString("name"), key.toString() + ".png"));
 
             }
 
