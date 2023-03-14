@@ -100,7 +100,7 @@ public class ProfileFragment extends Fragment {
 
         //si l'utilisateur n'est pas connecté:
         String urlImg ;
-        if(isConnected .equals("true")){
+        if(isConnected.equals("true")){
             SharedPreferences sharedPreferencesLol = getActivity().getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
             String profileIconIdRiot = sharedPreferencesLol.getString("profileIconIdRiot","false");
             String name = sharedPreferencesLol.getString("nameRiot", "false");
@@ -114,7 +114,6 @@ public class ProfileFragment extends Fragment {
             textView.setText(R.string.noConnected);
         }
 
-        https:
         Glide.with(this).load(urlImg).into(imageViewm);
 
 

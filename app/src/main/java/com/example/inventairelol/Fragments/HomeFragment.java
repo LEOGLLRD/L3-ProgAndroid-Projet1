@@ -14,11 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.GetMethodDemo;
 import com.example.inventairelol.Service.OnlineMYSQL;
+import com.example.inventairelol.Util.ChampAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -196,6 +199,13 @@ public class HomeFragment extends Fragment {
                 textView.setText(map.get("name"));
 
             }
+
+            //Génération de l'affichage des champions
+
+            ListView listView = getActivity().findViewById(R.id.chamipons);
+            ChampAdapter champAdapter = new ChampAdapter(getActivity(), 0, null);
+            champAdapter.getView(0, null, null);
+
         } catch (InterruptedException | ExecutionException | JSONException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

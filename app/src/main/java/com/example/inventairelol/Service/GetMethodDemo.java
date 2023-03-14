@@ -60,6 +60,7 @@ public class GetMethodDemo extends AsyncTask<String, Void, String> {
 
             //Récupération de la version actuelle
             String version = getVersion();
+            Log.i("version", version);
 
             if (version.equals("Fail") || version.equals("Error")) {
                 //Suppression du chargement
@@ -107,6 +108,7 @@ public class GetMethodDemo extends AsyncTask<String, Void, String> {
 
                 case "getAllItemInfo": {
                     URL url = new URL("http://ddragon.leagueoflegends.com/cdn/" + version + "/data/" + R.string.lang + "/item.json");
+                    Log.i("urlChamp", url.toString());
                     urlConnection = (HttpURLConnection) url.openConnection();
                     int responseCode = urlConnection.getResponseCode();
 
