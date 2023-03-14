@@ -2,37 +2,37 @@ package com.example.inventairelol.Fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.inventairelol.R;
-import com.example.inventairelol.Service.GetMethodDemo;
+import com.example.inventairelol.Service.ApiLoL;
 import com.example.inventairelol.Service.OnlineMYSQL;
 import com.example.inventairelol.Util.ChampAdapter;
+import com.example.inventairelol.Util.Champion;
+import com.example.inventairelol.Util.Item;
+import com.example.inventairelol.Util.ItemAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -86,14 +86,16 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+        ListView listViewChampion = v.findViewById(R.id.champions);
+        ListView listViewItem = v.findViewById(R.id.items);
 
-        TextView textView = (TextView) v.findViewById(R.id.test);
 
         try {
 
@@ -113,7 +115,7 @@ public class HomeFragment extends Fragment {
 
 
             //Vérification si le pseudo est passé via intent ou preferences
-            GetMethodDemo getMethodDemo;
+            ApiLoL apiLoL;
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", MODE_PRIVATE);
             String pseudo = sharedPreferences.getString("pseudo", "");
             if (!pseudo.equals("")) {
@@ -131,7 +133,7 @@ public class HomeFragment extends Fragment {
                     region = split[1];
                 }
                 //Récupération des infos de l'utilisateur
-                getMethodDemo = (GetMethodDemo) new GetMethodDemo(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
+                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
             }
             //Rien via preference, mais via intent
             else {
@@ -151,16 +153,16 @@ public class HomeFragment extends Fragment {
                         region = split[1];
                     }
                     //Récupération des infos de l'utilisateur
-                    getMethodDemo = (GetMethodDemo) new GetMethodDemo(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
+                    apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
                 }
                 //Récupération des infos de l'utilisateur
-                getMethodDemo = (GetMethodDemo) new GetMethodDemo(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
+                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", region, usernameRiot);
 
 
             }
 
 
-            String res = getMethodDemo.get();
+            String res = apiLoL.get();
             if (res.contains("Error :") || res.contains("Fail :")) {
 
             } else {
@@ -196,15 +198,62 @@ public class HomeFragment extends Fragment {
                 Map<String, String> map = (Map<String, String>) accountLol.getAll();
 
 
-                textView.setText(map.get("name"));
+            }
+
+            //Création du tableau de tous les champions
+
+            apiLoL = new ApiLoL(this.getContext());
+            apiLoL.execute("getAllChampInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", "EUW1");
+
+            ArrayList<Champion> champs = new ArrayList<Champion>();
+            //On récupère le json des champion
+            String res2 = apiLoL.get();
+
+            //On convertit le string en json
+            JSONObject jsonObject = new JSONObject(res2);
+            //On récupère les infos sur les champions
+            JSONObject data = jsonObject.getJSONObject("data");
+            //On itère et on créer un objet Champion par champion
+            for (Iterator<String> it = data.keys(); it.hasNext(); ) {
+                String key = it.next();
+                JSONObject infoChamp = data.getJSONObject(key);
+                champs.add(new Champion(infoChamp.get("id").toString(), infoChamp.get("id").toString() + ".png"));
 
             }
 
             //Génération de l'affichage des champions
+            ChampAdapter adapter = new ChampAdapter(getActivity(), champs);
+            listViewChampion.setAdapter(adapter);
 
-            ListView listView = getActivity().findViewById(R.id.chamipons);
-            ChampAdapter champAdapter = new ChampAdapter(getActivity(), 0, null);
-            champAdapter.getView(0, null, null);
+            //Création du tableau de tous les items
+
+            apiLoL = new ApiLoL(this.getContext());
+            apiLoL.execute("getAllItemInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", "EUW1");
+
+            ArrayList<Item> items = new ArrayList<Item>();
+            //On récupère le json des items
+            String res3 = apiLoL.get();
+
+
+            //On convertit le string en json
+            jsonObject = new JSONObject(res3);
+            //On récupère les infos sur les items
+            data = jsonObject.getJSONObject("data");
+            Log.i("data", data.toString());
+            //On itère et on créer un objet Item par item
+            for (Iterator<String> it = data.keys(); it.hasNext(); ) {
+                String key = it.next();
+                items.add(new Item(key.toString(), key.toString() + ".png"));
+
+            }
+
+            Log.v("items", items.toString());
+
+            //Génération de l'affichage des champions
+            ItemAdapter itemAdapter = new ItemAdapter(getActivity(), items);
+            listViewItem.setAdapter(itemAdapter);
+
+
 
         } catch (InterruptedException | ExecutionException | JSONException e) {
             throw new RuntimeException(e);

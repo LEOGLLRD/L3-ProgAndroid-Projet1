@@ -1,6 +1,8 @@
 package com.example.inventairelol.Util;
 
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +17,17 @@ import com.example.inventairelol.Service.ApiLoL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-
-public class ChampAdapter extends BaseAdapter {
+public class ItemAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<Champion> champs;
-    private TextView nameChamp;
-    private ImageView imgChamp;
+    private ArrayList<Item> items;
+    private TextView nameItem;
+    private ImageView imgItem;
 
     private String version;
 
-    public ChampAdapter(Context context, ArrayList<Champion> champs) throws ExecutionException, InterruptedException {
+    public ItemAdapter(Context context, ArrayList<Item> items) throws ExecutionException, InterruptedException {
         this.context = context;
-        this.champs = champs;
+        this.items = items;
         //Récupération de la version actuelle de LoL
         ApiLoL apiLoL = new ApiLoL(context);
         apiLoL.execute("getVersion", "RGAPI-d2e39834-878f-4c39-a650-406532246abe");
@@ -35,7 +36,7 @@ public class ChampAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return champs.size();
+        return items.size();
     }
 
     @Override
@@ -53,14 +54,15 @@ public class ChampAdapter extends BaseAdapter {
         try {
 
 
-            //récupération du champion
-            Champion champion = this.champs.get(i);
-            view = LayoutInflater.from(context).inflate(R.layout.champlist, viewGroup, false);
-            nameChamp = view.findViewById(R.id.nameChamp);
-            nameChamp.setText(champion.getName());
-            imgChamp = view.findViewById(R.id.imgChamp);
-            String urlImg = "https://ddragon.leagueoflegends.com/cdn/" + this.version + "/img/champion/"+champion.getUrlImg();
-            Glide.with(context).load(urlImg).into(imgChamp);
+            //récupération des items
+            Item item = this.items.get(i);
+            view = LayoutInflater.from(context).inflate(R.layout.itemlist, viewGroup, false);
+            nameItem = view.findViewById(R.id.nameItem);
+            nameItem.setText(item.getName());
+            imgItem = view.findViewById(R.id.imgItem);
+            String urlImg = "https://ddragon.leagueoflegends.com/cdn/" + version + "/img/item/" + item.getUrlImg();
+            Log.v("urlImg", urlImg);
+            Glide.with(context).load(urlImg).into(imgItem);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,11 +2,12 @@ package com.example.inventairelol.Util;
 
 import androidx.annotation.NonNull;
 
-public class Champion {
+public class Item {
+
     String name;
     String urlImg;
 
-    public Champion(String name, String urlImg) {
+    public Item(String name, String urlImg) {
         this.name = name;
         this.urlImg = urlImg;
     }

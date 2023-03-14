@@ -192,9 +192,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
             Thread t = new Thread(() -> {
                 try {
                     Class.forName("com.mysql.jdbc.Driver");
-                    Log.i("url", url);
                     connection = DriverManager.getConnection(url, user, pass);
-                    Log.i("connected", String.valueOf(isDbConnected()));
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
@@ -404,7 +402,6 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
         try {
             //On prépare la requête
             PreparedStatement stmt = connection.prepareStatement("select usernameRiot, region from user where pseudo = ?");
-            Log.v("stmt", stmt.toString());
             //On ajoute le pseudo à la requête
             stmt.setString(1, pseudo);
             //On execute la requête
