@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment {
                     region = split[1];
                 }
                 //Récupération des infos de l'utilisateur
-                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-135c1e76-3a3e-48a2-aaa5-08666b8d2cc5", region, usernameRiot);
+                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", region, usernameRiot);
             }
             //Rien via preference, mais via intent
             else {
@@ -153,10 +153,10 @@ public class HomeFragment extends Fragment {
                         region = split[1];
                     }
                     //Récupération des infos de l'utilisateur
-                    apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-135c1e76-3a3e-48a2-aaa5-08666b8d2cc5", region, usernameRiot);
+                    apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", region, usernameRiot);
                 }
                 //Récupération des infos de l'utilisateur
-                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", "RGAPI-135c1e76-3a3e-48a2-aaa5-08666b8d2cc5", region, usernameRiot);
+                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", region, usernameRiot);
 
 
             }
@@ -203,7 +203,7 @@ public class HomeFragment extends Fragment {
             //Création du tableau de tous les champions
 
             apiLoL = new ApiLoL(this.getContext());
-            apiLoL.execute("getAllChampInfo", "RGAPI-135c1e76-3a3e-48a2-aaa5-08666b8d2cc5", "EUW1");
+            apiLoL.execute("getAllChampInfo", "EUW1");
 
             ArrayList<Champion> champs = new ArrayList<Champion>();
             //On récupère le json des champion
@@ -229,7 +229,7 @@ public class HomeFragment extends Fragment {
             //Création du tableau de tous les items
 
             apiLoL = new ApiLoL(this.getContext());
-            apiLoL.execute("getAllItemInfo", "RGAPI-135c1e76-3a3e-48a2-aaa5-08666b8d2cc5", "EUW1");
+            apiLoL.execute("getAllItemInfo", "EUW1");
 
             ArrayList<Item> items = new ArrayList<Item>();
             //On récupère le json des items

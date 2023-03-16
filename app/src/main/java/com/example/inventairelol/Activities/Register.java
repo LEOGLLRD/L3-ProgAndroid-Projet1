@@ -116,7 +116,7 @@ public class Register extends AppCompatActivity {
                     } else {
 
                         apiLoL = new ApiLoL(register);
-                        apiLoL.execute("checkIfUserExists", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", spinnerRegion.getSelectedItem().toString(), usernameRiot.getText().toString());
+                        apiLoL.execute("checkIfUserExists", spinnerRegion.getSelectedItem().toString(), usernameRiot.getText().toString());
                         String res2 = apiLoL.get();
 
                         //Vérification si les compte Riot existe
@@ -130,7 +130,7 @@ public class Register extends AppCompatActivity {
                             //Récupération des info riot
 
                             apiLoL = new ApiLoL(register);
-                            apiLoL.execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", spinnerRegion.getSelectedItem().toString(), usernameRiot.getText().toString());
+                            apiLoL.execute("getUserInfo", spinnerRegion.getSelectedItem().toString(), usernameRiot.getText().toString());
                             String res3 = apiLoL.get();
 
                             //Vérification pas de fail ou d'erreur

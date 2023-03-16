@@ -2,6 +2,7 @@ package com.example.inventairelol.Service;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 
 import com.example.inventairelol.R;
@@ -17,14 +18,35 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Properties;
 
 public class ApiLoL extends AsyncTask<String, Void, String> {
 
+    String apiKey;
     ProgressDialog progressDialog;
     Context context;
 
     public ApiLoL(Context context) {
         this.context = context;
+
+        try {
+            //Récupération clé API
+            //Récupération du fichier de configuration
+            Properties p = new Properties();
+            AssetManager assetManager = context.getAssets();
+            InputStream inputStream = assetManager.open("config.properties");
+            p.load(inputStream);
+
+            //Récupération des paramétres de configurations de la base de données via le fichier config
+
+
+            this.apiKey = p.getProperty("apiKey");
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -66,17 +88,17 @@ public class ApiLoL extends AsyncTask<String, Void, String> {
             //Récupération de la directiv
             String directiv = strings[0];
             //Récupération de la clé API
-            String key = strings[1];
+
 
 
 
             switch (directiv) {
                 //Récupération des informations d'un joueur
                 case "getUserInfo": {
-                    String region = strings[2];
+                    String region = strings[1];
 
                     //Répération de l'username
-                    String username = strings[3];
+                    String username = strings[2];
                     //On vérifie que l'username Riot n'est pas vide
                     if (username.isEmpty()) {
                         //Suppression du chargement
@@ -84,7 +106,7 @@ public class ApiLoL extends AsyncTask<String, Void, String> {
                         return "Fail : Riot Username Empty";
                     }
                     //Montage de l'url
-                    URL url = new URL("https://" + region + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + username + "?api_key=" + key);
+                    URL url = new URL("https://" + region + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + username + "?api_key=" + apiKey);
                     urlConnection = (HttpURLConnection) url.openConnection();
                     int responseCode = urlConnection.getResponseCode();
 
@@ -136,11 +158,11 @@ public class ApiLoL extends AsyncTask<String, Void, String> {
                     }
                 }
                 case "checkIfUserExists": {
-                    String region = strings[2];
+                    String region = strings[1];
                     //Répération de l'username
-                    String username = strings[3];
+                    String username = strings[2];
 
-                    String doesExists = doesUserExists(username, region, key);
+                    String doesExists = doesUserExists(username, region, apiKey);
 
                     if (doesExists.contains("Fail :")) {
                         //Suppression du chargement
