@@ -3,11 +3,8 @@ package com.example.inventairelol.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,16 +16,23 @@ import android.widget.Toast;
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.ApiLoL;
 import com.example.inventairelol.Service.ServiceOnlineMYSQL;
+import com.example.inventairelol.Util.ConfigGetter;
+import com.example.inventairelol.Util.Preferences.PreferenceUserRiot;
+import com.example.inventairelol.Util.Preferences.PreferencesUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 public class Register extends AppCompatActivity {
+
+    static int nbInstance = 0;
 
     ServiceOnlineMYSQL serviceOnlineMYSQL;
     ApiLoL apiLoL;
@@ -42,6 +46,7 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        Register.nbInstance++;
 
         CheckBox remember = (CheckBox) findViewById(R.id.remember2);
         EditText usernameRiot = (EditText) findViewById(R.id.riotUsername);
@@ -55,17 +60,13 @@ public class Register extends AppCompatActivity {
             this.ePassword = findViewById(R.id.password);
 
             //Récupération du fichier de configuration de la base de données
-            Properties p = new Properties();
-            AssetManager assetManager = getApplicationContext().getAssets();
-            InputStream inputStream = assetManager.open("config.properties");
-            p.load(inputStream);
-
+            Map<String, String> config = new ConfigGetter(this).getDatabaseConfig();
             //Récupération des paramétres de configurations de la base de données via le fichier config
-            String hostname = p.getProperty("hostname");
-            String port = p.getProperty("port");
-            String database = p.getProperty("database");
-            this.username = p.getProperty("username");
-            this.password = p.getProperty("password");
+            String hostname = config.get("hostname");
+            String port = config.get("port");
+            String database = config.get("database");
+            this.username = config.get("username");
+            this.password = config.get("password");
             this.url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
 
 
@@ -158,7 +159,7 @@ public class Register extends AppCompatActivity {
                                 }
 
                                 //Gestion enregistrement de l'utilisateur
-                                serviceOnlineMYSQL = new ServiceOnlineMYSQL(register, url, username, password);
+                                serviceOnlineMYSQL = new ServiceOnlineMYSQL(register);
 
 
                                 serviceOnlineMYSQL.execute("register", eMail.getText().toString(), ePseudo.getText().toString(), ePassword.getText().toString(), usernameRiot.getText().toString(), spinnerRegion.getSelectedItem().toString());
@@ -186,7 +187,7 @@ public class Register extends AppCompatActivity {
                                         builder.show();
                                     }
                                     //Si c'est à cause du compte Riot qui est déjà link à un autre utilisateur
-                                    else if (res.contains("Riot account already linked to another user")){
+                                    else if (res.contains("Riot account already linked to another user")) {
                                         builder.setMessage(R.string.riotAccountAlreadyLinked);
                                         builder.show();
                                     }
@@ -203,74 +204,28 @@ public class Register extends AppCompatActivity {
 
                                     //On vérifie si l'utilisateur veut que l'application se rappelle de ses identifiants
                                     //pour le prochain lancement pour se connecter automatiquement
+
+                                    PreferencesUser preferencesUser = new PreferencesUser(Register.this);
+                                    preferencesUser.setUserInfo("pseudo", ePseudo.getText().toString());
+                                    preferencesUser.setUserInfo("password", ePassword.getText().toString());
+                                    preferencesUser.setUserInfo("connected", "true");
+
                                     if (remember.isChecked()) {
-                                        //Si oui, on ajoute les informations de connexion aux préférences
-                                        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString("pseudo", ePseudo.getText().toString());
-                                        editor.putString("password", ePassword.getText().toString());
-                                        editor.apply();
-
-                                        //Et on ajoute les informations du compte Riot
-                                        //Récupération des préférences
-                                        SharedPreferences accountLol = getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
-                                        editor = accountLol.edit();
-
-                                        editor.putString("idRiot", id);
-                                        editor.putString("accountIdRiot", accountId);
-                                        editor.putString("puuidRiot", puuid);
-                                        editor.putString("nameRiot", name);
-                                        editor.putString("profileIconIdRiot", profileIconId);
-                                        editor.putString("summonerLevelRiot", summonerLevel);
-                                        editor.apply();
-                                        //Message indiquant à l'utilisateur qu'il est connecté
-                                        Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
-                                        //Enfin on affiche la page d'accueil
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
+                                        //Si oui, on ajoute les informations de connexion aux préférences User
+                                        preferencesUser.setUserInfo("save", "true");
 
                                     } else {
-                                        //Si non, on vide les préférences
-                                        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString("pseudo", "");
-                                        editor.putString("password", "");
-                                        editor.apply();
-                                        SharedPreferences accountLol = getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
-                                        editor = accountLol.edit();
-
-                                        editor.putString("idRiot", "");
-                                        editor.putString("accountIdRiot", "");
-                                        editor.putString("puuidRiot", "");
-                                        editor.putString("nameRiot", "");
-                                        editor.putString("profileIconIdRiot", "");
-                                        editor.putString("summonerLevelRiot", "");
-                                        editor.apply();
-
-                                        //Message indiquant à l'utilisateur qu'il est connecté
-                                        Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
-
-                                        //L'utilisateur ne veut pas que ses identifiants soient enregistrés,
-                                        //donc nous allons les passer via intent, à la fermeture de l'application
-                                        //ils ne seront pas conservés
-
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        intent.putExtra("pseudo", ePseudo.getText().toString());
-                                        intent.putExtra("password", ePassword.getText().toString());
-                                        //Idem pour les info Riot
-                                        intent.putExtra("idRiot", id);
-                                        intent.putExtra("accountIdRiot", accountId);
-                                        intent.putExtra("puuidRiot", puuid);
-                                        intent.putExtra("nameRiot", name);
-                                        intent.putExtra("profileIconIdRiot", profileIconId);
-                                        intent.putExtra("summonerLevelRiot", summonerLevel);
-                                        //On lance la page d'accueil
-                                        startActivity(intent);
-                                        finish();
-
-
+                                        //Si non, on met save a false
+                                        preferencesUser.setUserInfo("save", "false");
                                     }
+
+                                    //Message indiquant à l'utilisateur qu'il est connecté
+                                    Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
+                                    //Enfin on affiche la page d'accueil
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+
                                 }
 
                             }
@@ -290,4 +245,12 @@ public class Register extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Register.nbInstance--;
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.inventairelol.Fragments;
 
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;

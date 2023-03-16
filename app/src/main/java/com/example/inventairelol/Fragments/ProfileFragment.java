@@ -21,6 +21,10 @@ import com.example.inventairelol.Activities.MainActivity;
 import com.example.inventairelol.Activities.Register;
 import com.example.inventairelol.DataBase.SQLiteBDD;
 import com.example.inventairelol.R;
+import com.example.inventairelol.Util.Preferences.PreferenceUserRiot;
+import com.example.inventairelol.Util.Preferences.PreferencesUser;
+
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,10 +66,7 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
-
     ImageView imageViewm;
-
 
 
     @Override
@@ -90,35 +91,50 @@ public class ProfileFragment extends Fragment {
         imageViewm = (ImageView) view.findViewById(R.id.imageView);
 
         //Pour gerer le text
-        TextView textView =(TextView) view.findViewById(R.id.textViewSimple);
+        TextView textView = (TextView) view.findViewById(R.id.textViewSimple);
 
         //Pour gerer les boutton
         Button button = (Button) view.findViewById(R.id.goProfil);
         Button buttonGoregister = (Button) view.findViewById(R.id.goRegister);
 
         //Vérification de la création d'une variable de connexion
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
-        String isConnected = sharedPreferences.getString("connected", "false");
+        PreferenceUserRiot preferenceUserRiot = new PreferenceUserRiot(getActivity());
+        Map<String, String> infosRiot = preferenceUserRiot.getUserInfo();
+        PreferencesUser preferencesUser = new PreferencesUser(getActivity());
+        Map<String, String> infosUser = preferencesUser.getUserInfo();
+
+        String connected =  "false";
+        if (infosUser.containsKey("connected")){
+            connected = infosUser.get("connected");
+        }
 
         //si l'utilisateur n'est pas connecté:
-        String urlImg ;
-        if(isConnected.equals("true")){
-            SharedPreferences sharedPreferencesLol = getActivity().getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
-            String profileIconIdRiot = sharedPreferencesLol.getString("profileIconIdRiot","false");
-            String name = sharedPreferencesLol.getString("nameRiot", "false");
-            urlImg = "http://ddragon.leagueoflegends.com/cdn/13.4.1/img/profileicon/"+ profileIconIdRiot + ".png";
-            String summonerLevelRiot = sharedPreferencesLol.getString("summonerLevelRiot","false");
-            textView.setText(name + "\n niveau: " + summonerLevelRiot );
+        String urlImg;
+        if (connected.equals("true")) {
+
+            Log.i("infosRiot", infosRiot.toString());
+
+            String profileIconId = "", name = "", summonerLevel = "";
+            if (infosRiot.containsKey("profileIconId")){
+                profileIconId = infosRiot.get("profileIconId");
+            }
+            if (infosRiot.containsKey("name")){
+                name = infosRiot.get("name");
+            }
+            if (infosRiot.containsKey("summonerLevel")){
+                summonerLevel = infosRiot.get("summonerLevel");
+            }
+
+            urlImg = "http://ddragon.leagueoflegends.com/cdn/13.4.1/img/profileicon/" + profileIconId + ".png";
+            textView.setText(name + "\n niveau: " + summonerLevel);
             buttonGoregister.setVisibility(View.INVISIBLE);
             button.setVisibility(View.INVISIBLE);
-        }else{
-            urlImg ="https://militaryhealthinstitute.org/wp-content/uploads/sites/37/2021/08/blank-profile-picture-png.png";
+        } else {
+            urlImg = "https://militaryhealthinstitute.org/wp-content/uploads/sites/37/2021/08/blank-profile-picture-png.png";
             textView.setText(R.string.noConnected);
         }
 
         Glide.with(this).load(urlImg).into(imageViewm);
-
-
 
 
         buttonGoregister.setOnClickListener(new View.OnClickListener() {

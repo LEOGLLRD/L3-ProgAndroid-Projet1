@@ -2,9 +2,10 @@ package com.example.inventairelol.Fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -16,25 +17,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.inventairelol.Activities.Login;
+import com.example.inventairelol.Activities.Register;
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.ApiLoL;
 import com.example.inventairelol.Service.ServiceOnlineMYSQL;
-import com.example.inventairelol.Util.ChampAdapter;
-import com.example.inventairelol.Util.Champion;
-import com.example.inventairelol.Util.Item;
-import com.example.inventairelol.Util.ItemAdapter;
+import com.example.inventairelol.Util.Champion.ChampAdapter;
+import com.example.inventairelol.Util.Champion.Champion;
+import com.example.inventairelol.Util.ConfigGetter;
+import com.example.inventairelol.Util.Item.Item;
+import com.example.inventairelol.Util.Item.ItemAdapter;
+import com.example.inventairelol.Util.Preferences.PreferenceUserRiot;
+import com.example.inventairelol.Util.Preferences.PreferencesUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -100,53 +104,59 @@ public class HomeFragment extends Fragment {
         try {
 
             //Récupération du fichier de configuration de la base de données
-            Properties p = new Properties();
-            AssetManager assetManager = getActivity().getAssets();
-            InputStream inputStream = assetManager.open("config.properties");
-            p.load(inputStream);
+            Map<String, String> config = new ConfigGetter(getActivity()).getDatabaseConfig();
 
             //Récupération des paramétres de configurations de la base de données via le fichier config
-            this.hostname = p.getProperty("hostname");
-            this.port = p.getProperty("port");
-            this.database = p.getProperty("database");
-            this.username = p.getProperty("username");
-            this.password = p.getProperty("password");
+            this.hostname = config.get("hostname");
+            this.port = config.get("port");
+            this.database = config.get("database");
+            this.username = config.get("username");
+            this.password = config.get("password");
             this.url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
 
 
-            //Vérification si le pseudo est passé via intent ou preferences
             ApiLoL apiLoL;
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", MODE_PRIVATE);
-            String pseudo = sharedPreferences.getString("pseudo", "");
-            if (!pseudo.equals("")) {
-                String usernameRiot = "", region = "";
-                ServiceOnlineMYSQL serviceOnlineMYSQL = new ServiceOnlineMYSQL(getActivity(), url, username, password);
-                serviceOnlineMYSQL.execute("getRiotUsernameAndRegion", pseudo);
-                String res = serviceOnlineMYSQL.get();
-                Log.i("res", res);
+            PreferencesUser preferencesUser = new PreferencesUser(getActivity());
 
-                if (res == null) {
+            Map<String, String> infos = preferencesUser.getUserInfo();
 
-                } else {
-                    String[] split = res.split(",");
-                    usernameRiot = split[0];
-                    region = split[1];
-                }
-                //Récupération des infos de l'utilisateur
-                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", region, usernameRiot);
+            //Vérification si connecté
+            String connected = "false";
+            if (infos.containsKey("connected")) {
+                connected = infos.get("connected");
             }
-            //Rien via preference, mais via intent
-            else {
-                Intent intent = getActivity().getIntent();
-                Bundle extra = intent.getExtras();
-                String usernameRiot = "", region = "";
-                if (extra != null) {
-                    pseudo = extra.getString("pseudo");
-                    ServiceOnlineMYSQL serviceOnlineMYSQL = new ServiceOnlineMYSQL(getActivity(), url, username, password);
+
+            if (connected.equals("true")) {
+
+                String pseudo = "";
+                if (infos.containsKey("pseudo")) {
+                    pseudo = infos.get("pseudo");
+                }
+
+                //Vérification que le pseudo n'est pas vide
+                if (!pseudo.equals("")) {
+                    String usernameRiot = "", region = "";
+                    ServiceOnlineMYSQL serviceOnlineMYSQL = new ServiceOnlineMYSQL(getActivity());
                     serviceOnlineMYSQL.execute("getRiotUsernameAndRegion", pseudo);
                     String res = serviceOnlineMYSQL.get();
-                    if (res == null) {
 
+                    //On créer une Alerte pour informer l'utilisateur en cas de problème
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.errorLoginTitle)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(getActivity(), R.string.understood, Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getActivity(), Login.class);
+                                    startActivity(intent);
+                                    getActivity().finish();
+                                }
+                            });
+
+                    if (res == null) {
+                        builder.setMessage(R.string.errorMessage);
+                        builder.show();
                     } else {
                         String[] split = res.split(",");
                         usernameRiot = split[0];
@@ -154,52 +164,45 @@ public class HomeFragment extends Fragment {
                     }
                     //Récupération des infos de l'utilisateur
                     apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", region, usernameRiot);
+
+                    String res2 = apiLoL.get();
+
+
+                    if (res2.contains("Error :") || res2.contains("Fail :")) {
+
+                    } else {
+                        String str = "[" + res2 + "]";
+                        JSONArray array = new JSONArray(str);
+
+                        String id = null, accountId = null, puuid = null, name = null, profileIconId = null, summonerLevel = null;
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject object = array.getJSONObject(i);
+
+                            id = object.getString("id");
+                            accountId = object.getString("accountId");
+                            puuid = object.getString("puuid");
+                            name = object.getString("name");
+                            profileIconId = object.getString("profileIconId");
+                            summonerLevel = object.getString("summonerLevel");
+
+
+                        }
+
+
+                        //Récupération des préférences
+
+                        PreferenceUserRiot preferenceUserRiot = new PreferenceUserRiot(getActivity());
+                        preferenceUserRiot.setUserInfo("id", id);
+                        preferenceUserRiot.setUserInfo("accountId", accountId);
+                        preferenceUserRiot.setUserInfo("puuid", puuid);
+                        preferenceUserRiot.setUserInfo("name", name);
+                        preferenceUserRiot.setUserInfo("profileIconId", profileIconId);
+                        preferenceUserRiot.setUserInfo("summonerLevel", summonerLevel);
+
+                    }
+
                 }
-                //Récupération des infos de l'utilisateur
-                apiLoL = (ApiLoL) new ApiLoL(getContext()).execute("getUserInfo", region, usernameRiot);
-
-
             }
-
-
-            String res = apiLoL.get();
-            if (res.contains("Error :") || res.contains("Fail :")) {
-
-            } else {
-                String str = "[" + res + "]";
-                JSONArray array = new JSONArray(str);
-                Log.v("array", array.toString());
-
-                String id = null, accountId = null, puuid = null, name = null, profileIconId = null, summonerLevel = null;
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject object = array.getJSONObject(i);
-
-                    id = object.getString("id");
-                    accountId = object.getString("accountId");
-                    puuid = object.getString("puuid");
-                    name = object.getString("name");
-                    profileIconId = object.getString("profileIconId");
-                    summonerLevel = object.getString("summonerLevel");
-
-
-                }
-
-                //Récupération des préférences
-                SharedPreferences accountLol = getContext().getSharedPreferences("accountLolRiot", MODE_PRIVATE);
-                SharedPreferences.Editor editor = accountLol.edit();
-
-                editor.putString("idRiot", id);
-                editor.putString("accountIdRiot", accountId);
-                editor.putString("puuidRiot", puuid);
-                editor.putString("nameRiot", name);
-                editor.putString("profileIconIdRiot", profileIconId);
-                editor.putString("summonerLevelRiot", summonerLevel);
-                editor.apply();
-                Map<String, String> map = (Map<String, String>) accountLol.getAll();
-
-
-            }
-
             //Création du tableau de tous les champions
 
             apiLoL = new ApiLoL(this.getContext());
@@ -208,7 +211,6 @@ public class HomeFragment extends Fragment {
             ArrayList<Champion> champs = new ArrayList<Champion>();
             //On récupère le json des champion
             String res2 = apiLoL.get();
-            Log.i("res2", res2);
 
             //On convertit le string en json
             JSONObject jsonObject = new JSONObject(res2);
@@ -240,7 +242,6 @@ public class HomeFragment extends Fragment {
             jsonObject = new JSONObject(res3);
             //On récupère les infos sur les items
             data = jsonObject.getJSONObject("data");
-            Log.i("data", data.toString());
             //On itère et on créer un objet Item par item
             for (Iterator<String> it = data.keys(); it.hasNext(); ) {
                 String key = it.next();
@@ -249,17 +250,12 @@ public class HomeFragment extends Fragment {
 
             }
 
-            Log.v("items", items.toString());
-
             //Génération de l'affichage des champions
             ItemAdapter itemAdapter = new ItemAdapter(getActivity(), items);
             listViewItem.setAdapter(itemAdapter);
 
 
-
         } catch (InterruptedException | ExecutionException | JSONException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return v;

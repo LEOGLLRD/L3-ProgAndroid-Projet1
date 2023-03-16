@@ -1,4 +1,4 @@
-package com.example.inventairelol.Util;
+package com.example.inventairelol.Util.Champion;
 
 
 

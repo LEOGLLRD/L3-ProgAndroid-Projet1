@@ -2,42 +2,42 @@ package com.example.inventairelol.Service;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.inventairelol.Util.Item;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.example.inventairelol.Util.ConfigGetter;
 import org.mindrot.jbcrypt.BCrypt;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.Map;
 
 public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
 
     ProgressDialog progressDialog;
 
-    String url, user, pass;
+    String url, user, pass, database, port, hostname;
     Connection connection;
     Context context;
 
-    public ServiceOnlineMYSQL(Context context, String url, String user, String pass) {
-        this.url = url;
-        this.user = user;
-        this.pass = pass;
+    public ServiceOnlineMYSQL(Context context) {
+
+        //Récupération des paramétres de configurations de la base de données
+
+        Map<String, String> config = new ConfigGetter(context).getDatabaseConfig();
+
         this.context = context;
+        this.hostname = config.get("hostname");
+        this.port = config.get("port");
+        this.user = config.get("username");
+        this.pass = config.get("password");
+        this.database = config.get("database");
+        this.url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
+
+
 
     }
 
@@ -451,7 +451,8 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
 
         try {
             //Récupération du starter d'items
-            ArrayList<Integer> items = getStartItems();
+            ArrayList<Integer> items = new ConfigGetter(context).getStarterItems();
+
             for (int item : items
             ) {
                 //On ajoute à l'inventaire de l'utilisateur chaque item
@@ -535,40 +536,16 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
         }
     }
 
-    //Retourne les items de base à donner à un utilisateur quand il s'inscrit
-    public ArrayList<Integer> getStartItems() {
-        try {
-
-            ArrayList<Integer> returnedItems = new ArrayList<>();
-
-            //Récupération du fichier du start d'items
-            AssetManager assetManager = context.getAssets();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(assetManager.open("startItems.json")));
-            //Récupération en string du contenu du fichier
-            int c = 0;
-
-            String line = "" ;
-            StringBuilder sb = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-            String json = sb.toString();
-            //On convertit le string en json
-            JSONObject jsonObject = new JSONObject(json);
-            //On récupère les valeurs qui correspondes aux id des items
-            JSONArray items = (JSONArray) jsonObject.get("items");
+    public ArrayList<String> getInventoryFromUserId(String idUser){
+        try{
 
 
-            //On itère et récupère
-            for (int i = 0; i < items.length(); i++) {
-                //On ajoute les valeurs retrouvées
-                returnedItems.add((Integer) items.get(i));
-            }
-            return returnedItems;
-        } catch (Exception e) {
+
+        }catch (Exception e){
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
+
 
 }
