@@ -2,16 +2,12 @@ package com.example.inventairelol.Service;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.inventairelol.R;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONStringer;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 
 import java.io.BufferedReader;
@@ -22,14 +18,35 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Properties;
 
-public class GetMethodDemo extends AsyncTask<String, Void, String> {
+public class ApiLoL extends AsyncTask<String, Void, String> {
 
+    String apiKey;
     ProgressDialog progressDialog;
     Context context;
 
-    public GetMethodDemo(Context context) {
+    public ApiLoL(Context context) {
         this.context = context;
+
+        try {
+            //Récupération clé API
+            //Récupération du fichier de configuration
+            Properties p = new Properties();
+            AssetManager assetManager = context.getAssets();
+            InputStream inputStream = assetManager.open("config.properties");
+            p.load(inputStream);
+
+            //Récupération des paramétres de configurations de la base de données via le fichier config
+
+
+            this.apiKey = p.getProperty("apiKey");
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -61,6 +78,7 @@ public class GetMethodDemo extends AsyncTask<String, Void, String> {
             //Récupération de la version actuelle
             String version = getVersion();
 
+
             if (version.equals("Fail") || version.equals("Error")) {
                 //Suppression du chargement
                 progressDialog.dismiss();
@@ -70,17 +88,17 @@ public class GetMethodDemo extends AsyncTask<String, Void, String> {
             //Récupération de la directiv
             String directiv = strings[0];
             //Récupération de la clé API
-            String key = strings[1];
-            String region = strings[2];
+
 
 
 
             switch (directiv) {
                 //Récupération des informations d'un joueur
                 case "getUserInfo": {
+                    String region = strings[1];
 
                     //Répération de l'username
-                    String username = strings[3];
+                    String username = strings[2];
                     //On vérifie que l'username Riot n'est pas vide
                     if (username.isEmpty()) {
                         //Suppression du chargement
@@ -88,7 +106,7 @@ public class GetMethodDemo extends AsyncTask<String, Void, String> {
                         return "Fail : Riot Username Empty";
                     }
                     //Montage de l'url
-                    URL url = new URL("https://" + region + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + username + "?api_key=" + key);
+                    URL url = new URL("https://" + region + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + username + "?api_key=" + apiKey);
                     urlConnection = (HttpURLConnection) url.openConnection();
                     int responseCode = urlConnection.getResponseCode();
 
@@ -106,7 +124,8 @@ public class GetMethodDemo extends AsyncTask<String, Void, String> {
                 }
 
                 case "getAllItemInfo": {
-                    URL url = new URL("http://ddragon.leagueoflegends.com/cdn/" + version + "/data/" + R.string.lang + "/item.json");
+                    URL url = new URL("http://ddragon.leagueoflegends.com/cdn/" + version + "/data/" + context.getResources().getString(R.string.lang) + "/item.json");
+
                     urlConnection = (HttpURLConnection) url.openConnection();
                     int responseCode = urlConnection.getResponseCode();
 
@@ -122,7 +141,8 @@ public class GetMethodDemo extends AsyncTask<String, Void, String> {
                     }
                 }
                 case "getAllChampInfo": {
-                    URL url = new URL("https://ddragon.leagueoflegends.com/cdn/" + version + "/data/" + R.string.lang + "/champion.json");
+                    URL url = new URL("https://ddragon.leagueoflegends.com/cdn/" + version + "/data/" + context.getResources().getString(R.string.lang) + "/champion.json");
+
                     urlConnection = (HttpURLConnection) url.openConnection();
                     int responseCode = urlConnection.getResponseCode();
 
@@ -138,11 +158,12 @@ public class GetMethodDemo extends AsyncTask<String, Void, String> {
                     }
                 }
                 case "checkIfUserExists": {
+                    String region = strings[1];
                     //Répération de l'username
-                    String username = strings[3];
+                    String username = strings[2];
 
-                    String doesExists = doesUserExists(username, region, key);
-                    Log.i("Exists ?", doesExists);
+                    String doesExists = doesUserExists(username, region, apiKey);
+
                     if (doesExists.contains("Fail :")) {
                         //Suppression du chargement
                         progressDialog.dismiss();
@@ -152,6 +173,10 @@ public class GetMethodDemo extends AsyncTask<String, Void, String> {
                         progressDialog.dismiss();
                         return "true";
                     }
+                }
+                case "getVersion": {
+                    progressDialog.dismiss();
+                    return getVersion();
                 }
 
 
@@ -248,7 +273,7 @@ public class GetMethodDemo extends AsyncTask<String, Void, String> {
             HttpURLConnection urlConnection = null;
             //Montage de l'url
             URL url = new URL("https://" + region + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + usernameRiot + "?api_key=" + key);
-            Log.i("urlCheck", url.toString());
+
             urlConnection = (HttpURLConnection) url.openConnection();
             int responseCode = urlConnection.getResponseCode();
 

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,7 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.inventairelol.R;
-import com.example.inventairelol.Service.GetMethodDemo;
+import com.example.inventairelol.Service.ApiLoL;
 import com.example.inventairelol.Service.OnlineMYSQL;
 
 import org.json.JSONArray;
@@ -32,7 +31,7 @@ import java.util.concurrent.ExecutionException;
 public class Register extends AppCompatActivity {
 
     OnlineMYSQL onlineMYSQL;
-    GetMethodDemo getMethodDemo;
+    ApiLoL apiLoL;
     EditText eMail, ePseudo, ePassword;
     String username, url, password;
     private Register register = this;
@@ -116,9 +115,9 @@ public class Register extends AppCompatActivity {
                         builder.show();
                     } else {
 
-                        getMethodDemo = new GetMethodDemo(register);
-                        getMethodDemo.execute("checkIfUserExists", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", spinnerRegion.getSelectedItem().toString(), usernameRiot.getText().toString());
-                        String res2 = getMethodDemo.get();
+                        apiLoL = new ApiLoL(register);
+                        apiLoL.execute("checkIfUserExists", spinnerRegion.getSelectedItem().toString(), usernameRiot.getText().toString());
+                        String res2 = apiLoL.get();
 
                         //Vérification si les compte Riot existe
                         if (res2.equals("false")) {
@@ -130,9 +129,9 @@ public class Register extends AppCompatActivity {
                             //Si oui on récupère les infos du compte
                             //Récupération des info riot
 
-                            getMethodDemo = new GetMethodDemo(register);
-                            getMethodDemo.execute("getUserInfo", "RGAPI-d2e39834-878f-4c39-a650-406532246abe", spinnerRegion.getSelectedItem().toString(), usernameRiot.getText().toString());
-                            String res3 = getMethodDemo.get();
+                            apiLoL = new ApiLoL(register);
+                            apiLoL.execute("getUserInfo", spinnerRegion.getSelectedItem().toString(), usernameRiot.getText().toString());
+                            String res3 = apiLoL.get();
 
                             //Vérification pas de fail ou d'erreur
                             if (res3.contains("Fail :") || res3.contains("Error :")) {

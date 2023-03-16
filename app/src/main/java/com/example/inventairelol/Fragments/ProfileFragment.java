@@ -100,12 +100,20 @@ public class ProfileFragment extends Fragment {
 
         //si l'utilisateur n'est pas connecté:
         String urlImg ;
-        if(isConnected .equals("true")){
-             urlImg = "http://ddragon.leagueoflegends.com/cdn/13.4.1/img/profileicon/5719.png";
+        if(isConnected.equals("true")){
+            SharedPreferences sharedPreferencesLol = getActivity().getSharedPreferences("accountLolRiot", Context.MODE_PRIVATE);
+            String profileIconIdRiot = sharedPreferencesLol.getString("profileIconIdRiot","false");
+            String name = sharedPreferencesLol.getString("nameRiot", "false");
+            urlImg = "http://ddragon.leagueoflegends.com/cdn/13.4.1/img/profileicon/"+ profileIconIdRiot + ".png";
+            String summonerLevelRiot = sharedPreferencesLol.getString("summonerLevelRiot","false");
+            textView.setText(name + "\n niveau: " + summonerLevelRiot );
+            buttonGoregister.setVisibility(View.INVISIBLE);
+            button.setVisibility(View.INVISIBLE);
         }else{
             urlImg ="https://militaryhealthinstitute.org/wp-content/uploads/sites/37/2021/08/blank-profile-picture-png.png";
+            textView.setText(R.string.noConnected);
         }
-        textView.setText(R.string.noConnected);https:
+
         Glide.with(this).load(urlImg).into(imageViewm);
 
 

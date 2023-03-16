@@ -161,6 +161,13 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                     }
 
                 }
+                case "getRiotUsernameAndRegion": {
+                    connect();
+                    //Récupération du pseudo
+                    String pseudo = strings[1];
+                    progressDialog.dismiss();
+                    return this.getRiotUsernameAndRegionFromPseudo(pseudo);
+                }
                 default: {
                     progressDialog.dismiss();
                     return "Error : An Error Occured";
@@ -185,9 +192,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
             Thread t = new Thread(() -> {
                 try {
                     Class.forName("com.mysql.jdbc.Driver");
-                    Log.i("url", url);
                     connection = DriverManager.getConnection(url, user, pass);
-                    Log.i("connected", String.valueOf(isDbConnected()));
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
@@ -396,7 +401,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
     public String getRiotUsernameAndRegionFromPseudo(String pseudo) {
         try {
             //On prépare la requête
-            PreparedStatement stmt = connection.prepareStatement("select usernameRiot, Region from user where pseudo = ?");
+            PreparedStatement stmt = connection.prepareStatement("select usernameRiot, region from user where pseudo = ?");
             //On ajoute le pseudo à la requête
             stmt.setString(1, pseudo);
             //On execute la requête

@@ -121,8 +121,6 @@ public class MainActivity extends AppCompatActivity {
             else if (extra != null) {
                 String pseudoViaIntent = extra.getString("pseudo");
                 String passwordViaIntent = extra.getString("password");
-                Log.i("intent Pseudo", pseudoViaIntent);
-                Log.i("intent Password", passwordViaIntent);
                 //Si oui on vérifie qu'elles sont bien existantes
                 if (pseudoViaIntent != null && passwordViaIntent != null) {
                     Log.i("in", "in");
