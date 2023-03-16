@@ -15,16 +15,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.inventairelol.DataBase.SQLiteBDDHelper;
+import com.example.inventairelol.DataBase.SQLiteBDD;
 import com.example.inventairelol.Fragments.HomeFragment;
 import com.example.inventairelol.Fragments.InventoryFragment;
 import com.example.inventairelol.Fragments.ProfileFragment;
 import com.example.inventairelol.R;
-import com.example.inventairelol.Service.OnlineMYSQL;
+import com.example.inventairelol.Service.ServiceOnlineMYSQL;
 import com.example.inventairelol.databinding.ActivityMainBinding;
 
 import java.io.InputStream;
-import java.util.PrimitiveIterator;
 import java.util.Properties;
 
 
@@ -32,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
 
 
-    SQLiteBDDHelper bddHelper;
-    OnlineMYSQL onlineMYSQL;
+    SQLiteBDD bddHelper;
+    ServiceOnlineMYSQL serviceOnlineMYSQL;
     boolean isConnected;
     private static String hostname;
     private static String port;
@@ -66,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
 
             //Puis instanciation de la variable de connexion et connexion
-            onlineMYSQL = new OnlineMYSQL(this, url, username, password);
-            onlineMYSQL.execute("connect");
+            serviceOnlineMYSQL = new ServiceOnlineMYSQL(this, url, username, password);
+            serviceOnlineMYSQL.execute("connect");
 
             //On vérifie si il y a un compte enregistré via les préférences
             SharedPreferences sharedPreferences = this.getSharedPreferences("user", MODE_PRIVATE);
@@ -80,11 +79,11 @@ public class MainActivity extends AppCompatActivity {
 
             //Si pseudo et password ne sont pas vide alors on essaie de connecter
             if (!pseudo.equals("") && !pass.equals("")) {
-                onlineMYSQL = new OnlineMYSQL(this, url, username, password);
-                onlineMYSQL.execute("login", pseudo, pass);
+                serviceOnlineMYSQL = new ServiceOnlineMYSQL(this, url, username, password);
+                serviceOnlineMYSQL.execute("login", pseudo, pass);
 
                 //Recupération de la réponse du Service
-                String res = onlineMYSQL.get();
+                String res = serviceOnlineMYSQL.get();
 
                 //Si fail ou error dans la connexion on renvoie vers la page de connexion
                 if (res.contains("Fail") || res.contains("Error")) {
@@ -125,11 +124,11 @@ public class MainActivity extends AppCompatActivity {
                 if (pseudoViaIntent != null && passwordViaIntent != null) {
                     Log.i("in", "in");
                     //Si oui on tente la connexion
-                    onlineMYSQL = new OnlineMYSQL(this, url, username, password);
-                    onlineMYSQL.execute("login", pseudoViaIntent, passwordViaIntent);
+                    serviceOnlineMYSQL = new ServiceOnlineMYSQL(this, url, username, password);
+                    serviceOnlineMYSQL.execute("login", pseudoViaIntent, passwordViaIntent);
 
                     //Recupération de la réponse du Service
-                    String res = onlineMYSQL.get();
+                    String res = serviceOnlineMYSQL.get();
 
                     //Si fail ou error dans la connexion on renvoie vers la page de connexion
                     if (res.contains("Fail") || res.contains("Error")) {

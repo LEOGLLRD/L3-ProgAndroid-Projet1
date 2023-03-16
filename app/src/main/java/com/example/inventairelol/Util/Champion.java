@@ -1,6 +1,6 @@
 package com.example.inventairelol.Util;
 
-import androidx.annotation.NonNull;
+
 
 public class Champion {
     String name;
@@ -27,7 +27,6 @@ public class Champion {
         this.urlImg = urlImg;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return this.name + " " + this.urlImg;

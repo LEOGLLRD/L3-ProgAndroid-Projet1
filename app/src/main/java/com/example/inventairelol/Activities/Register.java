@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.ApiLoL;
-import com.example.inventairelol.Service.OnlineMYSQL;
+import com.example.inventairelol.Service.ServiceOnlineMYSQL;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutionException;
 
 public class Register extends AppCompatActivity {
 
-    OnlineMYSQL onlineMYSQL;
+    ServiceOnlineMYSQL serviceOnlineMYSQL;
     ApiLoL apiLoL;
     EditText eMail, ePseudo, ePassword;
     String username, url, password;
@@ -158,12 +158,12 @@ public class Register extends AppCompatActivity {
                                 }
 
                                 //Gestion enregistrement de l'utilisateur
-                                onlineMYSQL = new OnlineMYSQL(register, url, username, password);
+                                serviceOnlineMYSQL = new ServiceOnlineMYSQL(register, url, username, password);
 
 
-                                onlineMYSQL.execute("register", eMail.getText().toString(), ePseudo.getText().toString(), ePassword.getText().toString(), usernameRiot.getText().toString(), spinnerRegion.getSelectedItem().toString());
+                                serviceOnlineMYSQL.execute("register", eMail.getText().toString(), ePseudo.getText().toString(), ePassword.getText().toString(), usernameRiot.getText().toString(), spinnerRegion.getSelectedItem().toString());
 
-                                String res = onlineMYSQL.get();
+                                String res = serviceOnlineMYSQL.get();
 
                                 //Si on trouve le message Fail
                                 if (res.contains("Fail")) {

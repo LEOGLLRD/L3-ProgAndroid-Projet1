@@ -2,18 +2,30 @@ package com.example.inventairelol.Service;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.inventairelol.Util.Item;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Properties;
 
-public class OnlineMYSQL extends AsyncTask<String, Void, String> {
+public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
 
     ProgressDialog progressDialog;
 
@@ -21,7 +33,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
     Connection connection;
     Context context;
 
-    public OnlineMYSQL(Context context, String url, String user, String pass) {
+    public ServiceOnlineMYSQL(Context context, String url, String user, String pass) {
         this.url = url;
         this.user = user;
         this.pass = pass;
@@ -118,7 +130,12 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                     }
                     //Pas d'échecs ni d'erreurs
                     else {
+                        //Enregistrement
                         register(pseudo, mail, password, riotUsername, region);
+                        //Récupération de l'id de l'utilisateur
+                        String id = getIdFromPseudo(pseudo);
+                        //Puis ajout du set d'items de base
+                        initializeInventory(id);
                         //Suppression du chargement
                         progressDialog.dismiss();
                         return "Success : Register Done";
@@ -294,6 +311,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
     //Méthode pour l'enregistrement d'un nouvel utilisateur
     public int register(String pseudo, String mail, String password, String riotUsername, String region) {
 
+
         int res = 0;
 
         try {
@@ -424,6 +442,132 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
         catch (Exception e) {
             e.printStackTrace();
             return "";
+        }
+    }
+
+    //Méthode appelée pour initialiser un inventaire,
+    //on donne un set d'items de base
+    public void initializeInventory(String idUser) {
+
+        try {
+            //Récupération du starter d'items
+            ArrayList<Integer> items = getStartItems();
+            for (int item : items
+            ) {
+                //On ajoute à l'inventaire de l'utilisateur chaque item
+                insertItem(idUser, String.valueOf(item));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    //Méthode appelée pour ajouter un nouvel item à l'inventaire d'un utilisateur
+    public int insertItem(String idUser, String idItem) {
+
+        int res = 0;
+        try {
+
+            //On prépare la requête
+            PreparedStatement stmt = connection.prepareStatement("insert into inventory (idUser, idItem) values (?,?)");
+            //On ajoute l'idUser et l'idItem à la requête
+            stmt.setString(1, idUser);
+            stmt.setString(2, idItem);
+            //On execute la requête
+            res = stmt.executeUpdate();
+            return res;
+
+        }
+        //Si erreur retourne 0
+        catch (Exception e) {
+            e.printStackTrace();
+            return res;
+        }
+    }
+
+    //Méthode appelé pour supprimer un item de l'inventaire d'un utilisateur
+    public int deleteItem(String idUser, String idItem) {
+        int res = 0;
+        try {
+            //On prépare la requête
+            PreparedStatement stmt = connection.prepareStatement("delete from inventory where idUser = ? and idItem = ?");
+            //On ajoute l'idUser et l'idItem à la requête
+            stmt.setString(1, idUser);
+            stmt.setString(2, idItem);
+            //On execute la requête
+            res = stmt.executeUpdate();
+            return res;
+
+        }
+        //Si erreur retourne 0
+        catch (Exception e) {
+            e.printStackTrace();
+            return res;
+        }
+
+    }
+
+    //Retourne l'id d'un utilisateur en fonction de son pseudo
+    public String getIdFromPseudo(String pseudo) {
+        try {
+            //On prépare la requête
+            PreparedStatement stmt = connection.prepareStatement("select id from user where pseudo = ?");
+            //On ajoute le pseudo à la requête
+            stmt.setString(1, pseudo);
+            //On execute la requête
+            ResultSet rs = stmt.executeQuery();
+            String id;
+            //Si on a un resultat
+            if (rs.next()) {
+                //On récupère l'id
+                id = rs.getString(1);
+                return id;
+            }
+            //Sinon on retourne un champ vide
+            else return "";
+
+        }
+        //Si erreur, on retourne un champ vide
+        catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    //Retourne les items de base à donner à un utilisateur quand il s'inscrit
+    public ArrayList<Integer> getStartItems() {
+        try {
+
+            ArrayList<Integer> returnedItems = new ArrayList<>();
+
+            //Récupération du fichier du start d'items
+            AssetManager assetManager = context.getAssets();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(assetManager.open("startItems.json")));
+            //Récupération en string du contenu du fichier
+            int c = 0;
+
+            String line = "" ;
+            StringBuilder sb = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            String json = sb.toString();
+            //On convertit le string en json
+            JSONObject jsonObject = new JSONObject(json);
+            //On récupère les valeurs qui correspondes aux id des items
+            JSONArray items = (JSONArray) jsonObject.get("items");
+
+
+            //On itère et récupère
+            for (int i = 0; i < items.length(); i++) {
+                //On ajoute les valeurs retrouvées
+                returnedItems.add((Integer) items.get(i));
+            }
+            return returnedItems;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

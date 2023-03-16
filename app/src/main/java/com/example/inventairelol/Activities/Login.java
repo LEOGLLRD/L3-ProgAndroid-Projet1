@@ -3,8 +3,6 @@ package com.example.inventairelol.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -16,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.inventairelol.R;
-import com.example.inventairelol.Service.OnlineMYSQL;
+import com.example.inventairelol.Service.ServiceOnlineMYSQL;
 import com.google.android.material.button.MaterialButton;
 
 import java.io.InputStream;
@@ -25,7 +23,7 @@ import java.util.Properties;
 public class Login extends AppCompatActivity {
 
 
-    OnlineMYSQL onlineMYSQL;
+    ServiceOnlineMYSQL serviceOnlineMYSQL;
     String username, url, password;
     Login login = this;
 
@@ -84,10 +82,10 @@ public class Login extends AppCompatActivity {
                 try {
 
                     //Instanciation de la variable de connexion à la base de données
-                    onlineMYSQL = new OnlineMYSQL(login, url, username, password);
+                    serviceOnlineMYSQL = new ServiceOnlineMYSQL(login, url, username, password);
 
                     //Appel de la méthode de login
-                    onlineMYSQL.execute("login", tPseudo.getText().toString(), tPassword.getText().toString());
+                    serviceOnlineMYSQL.execute("login", tPseudo.getText().toString(), tPassword.getText().toString());
 
                     //On créer une Alerte pour informer l'utilisateur
                     AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
@@ -95,7 +93,7 @@ public class Login extends AppCompatActivity {
                             .setCancelable(false)
                             .setPositiveButton(R.string.understood, null);
 
-                    String res = onlineMYSQL.get();
+                    String res = serviceOnlineMYSQL.get();
                     Log.i("res", res);
 
                     //Vérification echec

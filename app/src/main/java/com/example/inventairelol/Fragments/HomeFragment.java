@@ -19,7 +19,7 @@ import android.widget.ListView;
 
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.ApiLoL;
-import com.example.inventairelol.Service.OnlineMYSQL;
+import com.example.inventairelol.Service.ServiceOnlineMYSQL;
 import com.example.inventairelol.Util.ChampAdapter;
 import com.example.inventairelol.Util.Champion;
 import com.example.inventairelol.Util.Item;
@@ -120,9 +120,9 @@ public class HomeFragment extends Fragment {
             String pseudo = sharedPreferences.getString("pseudo", "");
             if (!pseudo.equals("")) {
                 String usernameRiot = "", region = "";
-                OnlineMYSQL onlineMYSQL = new OnlineMYSQL(getActivity(), url, username, password);
-                onlineMYSQL.execute("getRiotUsernameAndRegion", pseudo);
-                String res = onlineMYSQL.get();
+                ServiceOnlineMYSQL serviceOnlineMYSQL = new ServiceOnlineMYSQL(getActivity(), url, username, password);
+                serviceOnlineMYSQL.execute("getRiotUsernameAndRegion", pseudo);
+                String res = serviceOnlineMYSQL.get();
                 Log.i("res", res);
 
                 if (res == null) {
@@ -142,9 +142,9 @@ public class HomeFragment extends Fragment {
                 String usernameRiot = "", region = "";
                 if (extra != null) {
                     pseudo = extra.getString("pseudo");
-                    OnlineMYSQL onlineMYSQL = new OnlineMYSQL(getActivity(), url, username, password);
-                    onlineMYSQL.execute("getRiotUsernameAndRegion", pseudo);
-                    String res = onlineMYSQL.get();
+                    ServiceOnlineMYSQL serviceOnlineMYSQL = new ServiceOnlineMYSQL(getActivity(), url, username, password);
+                    serviceOnlineMYSQL.execute("getRiotUsernameAndRegion", pseudo);
+                    String res = serviceOnlineMYSQL.get();
                     if (res == null) {
 
                     } else {
