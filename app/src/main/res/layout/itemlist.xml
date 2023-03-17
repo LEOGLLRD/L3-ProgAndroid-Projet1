@@ -22,12 +22,18 @@
                     android:id="@+id/nameItem"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:shadowColor="#000000"
+                    android:shadowDx="-4"
+                    android:shadowDy="-4"
+                    android:shadowRadius="1"
+                    android:text="TextView"
+                    android:textColor="#D29D03"
+                    android:textSize="20dp" />
 
                 <ImageView
                     android:id="@+id/imgItem"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_toRightOf="@id/nameItem"
                     app:srcCompat="@drawable/baseline_info_24" />
             </RelativeLayout>

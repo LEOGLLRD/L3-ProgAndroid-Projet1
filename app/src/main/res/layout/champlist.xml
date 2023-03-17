@@ -23,12 +23,18 @@
                     android:id="@+id/nameChamp"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:hint="championName"></TextView>
+                    android:hint="championName"
+                    android:shadowColor="#000000"
+                    android:shadowDx="-4"
+                    android:shadowDy="-4"
+                    android:shadowRadius="1"
+                    android:textColor="#D29D03"
+                    android:textSize="20dp"></TextView>
 
                 <ImageView
                     android:id="@+id/imgChamp"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_toRightOf="@id/nameChamp" />
             </RelativeLayout>
 

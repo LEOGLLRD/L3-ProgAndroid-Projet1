@@ -57,6 +57,8 @@
     <string name="logOut">Se déconnecter</string>
     <string name="acceptLocation">Vous devez autoriser la localisation</string>
     <string name="localisation">Afficher votre ville</string>
+    <string name="champions">Champions :</string>
+    <string name="items">Items :</string>
 
 
 
