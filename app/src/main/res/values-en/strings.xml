@@ -56,6 +56,12 @@
     <string name="riotAccountDoesntExist">No account found,\nCheck out the username and the region</string>
     <string name="riotAccountEmpty">You didn\'t fill your Riot account </string>
     <string name="riotAccountAlreadyLinked">This account is already linked to another user </string>
+    <string name="logOut">Log Out</string>
+    <string name="acceptLocation">You must accept this location</string>
+    <string name="localisation">Show your City</string>
+
+
+
 
 
 </resources>

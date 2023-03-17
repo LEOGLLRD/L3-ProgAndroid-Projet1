@@ -96,7 +96,6 @@ public class Login extends AppCompatActivity {
                             .setPositiveButton(R.string.understood, null);
 
                     String res = onlineMYSQL.get();
-                    Log.i("res", res);
 
                     //Vérification echec
                     if (res.contains("Fail")) {
