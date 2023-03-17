@@ -96,7 +96,6 @@ public class Login extends AppCompatActivity {
 
                     String res = serviceOnlineMYSQL.get();
 
-                    String res = onlineMYSQL.get();
 
 
                     //Vérification echec
