@@ -1,8 +1,7 @@
-package com.example.inventairelol.Util;
+package com.example.inventairelol.Util.Item;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.ApiLoL;
+import com.example.inventairelol.Util.Item.Item;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;

@@ -5,27 +5,39 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.inventairelol.Util.ConfigGetter;
 import org.mindrot.jbcrypt.BCrypt;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Map;
 
-public class OnlineMYSQL extends AsyncTask<String, Void, String> {
+public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
 
     ProgressDialog progressDialog;
 
-    String url, user, pass;
+    String url, user, pass, database, port, hostname;
     Connection connection;
     Context context;
 
-    public OnlineMYSQL(Context context, String url, String user, String pass) {
-        this.url = url;
-        this.user = user;
-        this.pass = pass;
+    public ServiceOnlineMYSQL(Context context) {
+
+        //Récupération des paramétres de configurations de la base de données
+
+        Map<String, String> config = new ConfigGetter(context).getDatabaseConfig();
+
         this.context = context;
+        this.hostname = config.get("hostname");
+        this.port = config.get("port");
+        this.user = config.get("username");
+        this.pass = config.get("password");
+        this.database = config.get("database");
+        this.url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
+
+
 
     }
 
@@ -118,7 +130,12 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
                     }
                     //Pas d'échecs ni d'erreurs
                     else {
+                        //Enregistrement
                         register(pseudo, mail, password, riotUsername, region);
+                        //Récupération de l'id de l'utilisateur
+                        String id = getIdFromPseudo(pseudo);
+                        //Puis ajout du set d'items de base
+                        initializeInventory(id);
                         //Suppression du chargement
                         progressDialog.dismiss();
                         return "Success : Register Done";
@@ -294,6 +311,7 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
     //Méthode pour l'enregistrement d'un nouvel utilisateur
     public int register(String pseudo, String mail, String password, String riotUsername, String region) {
 
+
         int res = 0;
 
         try {
@@ -426,5 +444,108 @@ public class OnlineMYSQL extends AsyncTask<String, Void, String> {
             return "";
         }
     }
+
+    //Méthode appelée pour initialiser un inventaire,
+    //on donne un set d'items de base
+    public void initializeInventory(String idUser) {
+
+        try {
+            //Récupération du starter d'items
+            ArrayList<Integer> items = new ConfigGetter(context).getStarterItems();
+
+            for (int item : items
+            ) {
+                //On ajoute à l'inventaire de l'utilisateur chaque item
+                insertItem(idUser, String.valueOf(item));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    //Méthode appelée pour ajouter un nouvel item à l'inventaire d'un utilisateur
+    public int insertItem(String idUser, String idItem) {
+
+        int res = 0;
+        try {
+
+            //On prépare la requête
+            PreparedStatement stmt = connection.prepareStatement("insert into inventory (idUser, idItem) values (?,?)");
+            //On ajoute l'idUser et l'idItem à la requête
+            stmt.setString(1, idUser);
+            stmt.setString(2, idItem);
+            //On execute la requête
+            res = stmt.executeUpdate();
+            return res;
+
+        }
+        //Si erreur retourne 0
+        catch (Exception e) {
+            e.printStackTrace();
+            return res;
+        }
+    }
+
+    //Méthode appelé pour supprimer un item de l'inventaire d'un utilisateur
+    public int deleteItem(String idUser, String idItem) {
+        int res = 0;
+        try {
+            //On prépare la requête
+            PreparedStatement stmt = connection.prepareStatement("delete from inventory where idUser = ? and idItem = ?");
+            //On ajoute l'idUser et l'idItem à la requête
+            stmt.setString(1, idUser);
+            stmt.setString(2, idItem);
+            //On execute la requête
+            res = stmt.executeUpdate();
+            return res;
+
+        }
+        //Si erreur retourne 0
+        catch (Exception e) {
+            e.printStackTrace();
+            return res;
+        }
+
+    }
+
+    //Retourne l'id d'un utilisateur en fonction de son pseudo
+    public String getIdFromPseudo(String pseudo) {
+        try {
+            //On prépare la requête
+            PreparedStatement stmt = connection.prepareStatement("select id from user where pseudo = ?");
+            //On ajoute le pseudo à la requête
+            stmt.setString(1, pseudo);
+            //On execute la requête
+            ResultSet rs = stmt.executeQuery();
+            String id;
+            //Si on a un resultat
+            if (rs.next()) {
+                //On récupère l'id
+                id = rs.getString(1);
+                return id;
+            }
+            //Sinon on retourne un champ vide
+            else return "";
+
+        }
+        //Si erreur, on retourne un champ vide
+        catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public ArrayList<String> getInventoryFromUserId(String idUser){
+        try{
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 }

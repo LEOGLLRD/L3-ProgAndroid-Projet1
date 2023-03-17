@@ -2,10 +2,10 @@ package com.example.inventairelol.Service;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.AsyncTask;
 
 import com.example.inventairelol.R;
+import com.example.inventairelol.Util.ConfigGetter;
 
 import org.json.JSONArray;
 
@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Properties;
 
 public class ApiLoL extends AsyncTask<String, Void, String> {
@@ -32,17 +33,9 @@ public class ApiLoL extends AsyncTask<String, Void, String> {
         try {
             //Récupération clé API
             //Récupération du fichier de configuration
-            Properties p = new Properties();
-            AssetManager assetManager = context.getAssets();
-            InputStream inputStream = assetManager.open("config.properties");
-            p.load(inputStream);
-
-            //Récupération des paramétres de configurations de la base de données via le fichier config
-
-
-            this.apiKey = p.getProperty("apiKey");
-
-
+            Map<String, String> config = new ConfigGetter(context).getDatabaseConfig();
+            //Récupération des paramétres de configurations
+            this.apiKey = config.get("apiKey");
 
         }catch (Exception e){
             e.printStackTrace();
