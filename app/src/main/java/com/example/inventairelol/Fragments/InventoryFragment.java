@@ -1,5 +1,6 @@
 package com.example.inventairelol.Fragments;
 
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.inventairelol.DataBase.SQLiteBDD;
 import com.example.inventairelol.R;
 
 /**
@@ -16,6 +18,8 @@ import com.example.inventairelol.R;
  * create an instance of this fragment.
  */
 public class InventoryFragment extends Fragment {
+
+    static SQLiteBDD localSQL;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +65,12 @@ public class InventoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_inventory, container, false);
+        View view = inflater.inflate(R.layout.fragment_inventory, container, false);
+
+        //Instanciation de la base de données Local.
+        localSQL = new SQLiteBDD(getActivity().getApplicationContext(), "leo");
+
+
+        return view;
     }
 }

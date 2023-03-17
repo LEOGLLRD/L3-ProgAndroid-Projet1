@@ -3,11 +3,8 @@ package com.example.inventairelol.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,16 +13,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.inventairelol.R;
-import com.example.inventairelol.Service.OnlineMYSQL;
+import com.example.inventairelol.Service.ServiceOnlineMYSQL;
+import com.example.inventairelol.Util.ConfigGetter;
+import com.example.inventairelol.Util.Preferences.PreferenceUserRiot;
+import com.example.inventairelol.Util.Preferences.PreferencesUser;
 import com.google.android.material.button.MaterialButton;
 
-import java.io.InputStream;
-import java.util.Properties;
+import java.util.Map;
 
 public class Login extends AppCompatActivity {
 
+    static int nbInstance = 0;
 
-    OnlineMYSQL onlineMYSQL;
+    ServiceOnlineMYSQL serviceOnlineMYSQL;
     String username, url, password;
     Login login = this;
 
@@ -35,6 +35,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Login.nbInstance++;
 
         //Récupération des variables
         TextView tPseudo = (TextView) findViewById(R.id.username);
@@ -57,17 +58,14 @@ public class Login extends AppCompatActivity {
         try {
 
             //Récupération du fichier de configuration de la base de données
-            Properties p = new Properties();
-            AssetManager assetManager = getApplicationContext().getAssets();
-            InputStream inputStream = assetManager.open("config.properties");
-            p.load(inputStream);
+            Map<String, String> config = new ConfigGetter(this).getDatabaseConfig();
 
             //Récupération des paramétres de configurations de la base de données via le fichier config
-            String hostname = p.getProperty("hostname");
-            String port = p.getProperty("port");
-            String database = p.getProperty("database");
-            this.username = p.getProperty("username");
-            this.password = p.getProperty("password");
+            String hostname = config.get("hostname");
+            String port = config.get("port");
+            String database = config.get("databse");
+            this.username = config.get("username");
+            this.password = config.get("password");
             this.url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
 
 
@@ -84,10 +82,10 @@ public class Login extends AppCompatActivity {
                 try {
 
                     //Instanciation de la variable de connexion à la base de données
-                    onlineMYSQL = new OnlineMYSQL(login, url, username, password);
+                    serviceOnlineMYSQL = new ServiceOnlineMYSQL(login);
 
                     //Appel de la méthode de login
-                    onlineMYSQL.execute("login", tPseudo.getText().toString(), tPassword.getText().toString());
+                    serviceOnlineMYSQL.execute("login", tPseudo.getText().toString(), tPassword.getText().toString());
 
                     //On créer une Alerte pour informer l'utilisateur
                     AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
@@ -95,7 +93,11 @@ public class Login extends AppCompatActivity {
                             .setCancelable(false)
                             .setPositiveButton(R.string.understood, null);
 
+
+                    String res = serviceOnlineMYSQL.get();
+
                     String res = onlineMYSQL.get();
+
 
                     //Vérification echec
                     if (res.contains("Fail")) {
@@ -123,54 +125,33 @@ public class Login extends AppCompatActivity {
                         builder.setMessage(R.string.errorMessage);
                         builder.show();
                     }
-                    //Pas d'erreurs / d'echecs dans la connexion
+                    //Pas d'erreurs / echecs dans l'enregistrement
                     else {
 
 
                         //On vérifie si l'utilisateur veut que l'application se rappelle de ses identifiants
                         //pour le prochain lancement pour se connecter automatiquement
+
+                        PreferencesUser preferencesUser = new PreferencesUser(Login.this);
+                        preferencesUser.setUserInfo("pseudo", tPseudo.getText().toString());
+                        preferencesUser.setUserInfo("password", tPassword.getText().toString());
+                        preferencesUser.setUserInfo("connected", "true");
+
                         if (remember.isChecked()) {
-
-                            //Si oui, on ajoute les informations de connexion aux préférences
-                            SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("pseudo", tPseudo.getText().toString());
-                            editor.putString("password", tPassword.getText().toString());
-                            editor.apply();
-
-                            //Message indiquant à l'utilisateur qu'il est connecté
-                            Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
-                            //Enfin on affiche la page d'accueil
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            //Si oui, on ajoute les informations de connexion aux préférences User
+                            preferencesUser.setUserInfo("save", "true");
 
                         } else {
-                            //Si non, on vide les préférences
-                            SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("pseudo", "");
-                            editor.putString("password", "");
-                            editor.apply();
-
-                            //Message indiquant à l'utilisateur qu'il est connecté
-                            Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
-
-                            //L'utilisateur ne veut pas que ses identifiants soient enregistrés,
-                            //donc nous allons les passer via intent, à la fermeture de l'application
-                            //ils ne seront pas conservés
-
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            intent.putExtra("pseudo", tPseudo.getText().toString());
-                            intent.putExtra("password", tPassword.getText().toString());
-
-                            //On lance la page d'accueil
-                            startActivity(intent);
-                            finish();
-
-
+                            //Si non, on met save a false
+                            preferencesUser.setUserInfo("save", "false");
                         }
 
+                        //Message indiquant à l'utilisateur qu'il est connecté
+                        Toast.makeText(getApplicationContext(), R.string.connected, Toast.LENGTH_SHORT).show();
+                        //Enfin on affiche la page d'accueil
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
 
                     }
 
@@ -182,6 +163,16 @@ public class Login extends AppCompatActivity {
             }
 
         });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Login.nbInstance--;
+
+
+
 
     }
 }

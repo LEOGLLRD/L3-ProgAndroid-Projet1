@@ -16,7 +16,7 @@ CREATE TABLE `user` (
 ```
 
 Pour que l'application fonctionne, il faut ajouter via Android Studio un dossier Assets qui contient un fichier config.properties.
-Ce fichier contient les informations pour la connexion à la base de données en ligne.
+Ce fichier contient les informations pour la connexion à la base de données en ligne mais aussi la clé API pour contatcter l'API de Riot.
 Structure du fichier : 
 
 ```
@@ -25,4 +25,5 @@ port=****
 database=****************
 username=****************
 password=********
+apiKey=***********************************
 ```

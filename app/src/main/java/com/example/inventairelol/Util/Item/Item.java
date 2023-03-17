@@ -1,12 +1,13 @@
-package com.example.inventairelol.Util;
+package com.example.inventairelol.Util.Item;
 
-import androidx.annotation.NonNull;
 
-public class Champion {
+
+public class Item {
+
     String name;
     String urlImg;
 
-    public Champion(String name, String urlImg) {
+    public Item(String name, String urlImg) {
         this.name = name;
         this.urlImg = urlImg;
     }
@@ -27,7 +28,7 @@ public class Champion {
         this.urlImg = urlImg;
     }
 
-    @NonNull
+
     @Override
     public String toString() {
         return this.name + " " + this.urlImg;
