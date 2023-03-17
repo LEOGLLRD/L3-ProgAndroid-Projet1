@@ -54,6 +54,9 @@
     <string name="riotAccountDoesntExist">Pas de compte Riot trouvé,\nVérifiez le nom du compte et la région</string>
     <string name="riotAccountEmpty">Vous n\'avez pas renseigné de compte Riot </string>
     <string name="riotAccountAlreadyLinked">Ce compte est déjà associé à un autre utilisateur </string>
+    <string name="logOut">Se déconnecter</string>
+    <string name="acceptLocation">Vous devez autoriser la localisation</string>
+    <string name="localisation">Afficher votre ville</string>
 
 
 
