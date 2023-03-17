@@ -44,6 +44,7 @@
         android:background="#30ffffff"
         android:drawableLeft="@drawable/baseline_info_24"
         android:drawablePadding="20dp"
+        android:inputType="textPassword"
         android:hint="@string/Password"
         android:padding="20dp"
         android:textColor="@color/white"

@@ -35,6 +35,37 @@
         android:layout_marginBottom="193dp"
         android:text="@string/login" />
 
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/location"
+
+        android:text="Location" />
+
+    <Button
+        android:id="@+id/location"
+        android:layout_width="313dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="59dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="70dp"
+        android:text="@string/localisation" />
+
+    <Button
+        android:id="@+id/logOut"
+        android:layout_width="313dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="59dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="31dp"
+        android:text="@string/logOut" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
@@ -55,7 +86,6 @@
         android:id="@+id/goRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
