@@ -204,6 +204,7 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
             editor.apply();
             Intent intent = new Intent(getActivity(), Login.class);
             startActivity(intent);
+            getActivity().finish();
         }
     });
 
