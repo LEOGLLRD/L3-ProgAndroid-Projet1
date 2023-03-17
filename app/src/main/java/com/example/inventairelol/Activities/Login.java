@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,11 +94,7 @@ public class Login extends AppCompatActivity {
                             .setCancelable(false)
                             .setPositiveButton(R.string.understood, null);
 
-
                     String res = serviceOnlineMYSQL.get();
-
-
-
                     //Vérification echec
                     if (res.contains("Fail")) {
 
@@ -161,6 +158,22 @@ public class Login extends AppCompatActivity {
 
             }
 
+        });
+
+        Button asGuest = findViewById(R.id.invited);
+        asGuest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PreferencesUser preferencesUser = new PreferencesUser(Login.this);
+                preferencesUser.setUserInfo("save", "false");
+                preferencesUser.setUserInfo("connected", "false");
+                preferencesUser.setUserInfo("pseudo", "");
+                preferencesUser.setUserInfo("password", "");
+                //On affiche la page d'accueil
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
         });
 
     }

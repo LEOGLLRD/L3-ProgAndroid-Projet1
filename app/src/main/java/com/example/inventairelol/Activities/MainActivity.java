@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
             if (connected.equals("false")) {
                 //On affiche la page principale
                 replaceFragment(new HomeFragment());
+
             }
             //Si oui
             else {

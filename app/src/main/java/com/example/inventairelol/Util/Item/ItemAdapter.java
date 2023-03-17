@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.ApiLoL;
+import com.example.inventairelol.Util.ConfigGetter;
 import com.example.inventairelol.Util.Item.Item;
 
 import java.util.ArrayList;
@@ -25,13 +26,20 @@ public class ItemAdapter extends BaseAdapter {
 
     private String version;
 
-    public ItemAdapter(Context context, ArrayList<Item> items) throws ExecutionException, InterruptedException {
+    public ItemAdapter(Context context, ArrayList<Item> items) {
         this.context = context;
         this.items = items;
-        //Récupération de la version actuelle de LoL
-        ApiLoL apiLoL = new ApiLoL(context);
-        apiLoL.execute("getVersion", "RGAPI-d2e39834-878f-4c39-a650-406532246abe");
-        this.version = apiLoL.get();
+        try {
+            //Récupération de la version actuelle de LoL
+            ApiLoL apiLoL = new ApiLoL(context);
+
+            apiLoL.execute("getVersion", new ConfigGetter(context).getDatabaseConfig().get("apiKey").toString());
+            this.version = apiLoL.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -197,11 +197,8 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
     buttonLogout.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("pseudo", "");
-            editor.putString("password", "");
-            editor.apply();
+            preferencesUser.setUserInfo("pseudo", "");
+            preferencesUser.setUserInfo("password", "");
             Intent intent = new Intent(getActivity(), Login.class);
             startActivity(intent);
             getActivity().finish();

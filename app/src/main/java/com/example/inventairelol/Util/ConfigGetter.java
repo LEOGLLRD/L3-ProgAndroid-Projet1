@@ -35,8 +35,6 @@ public class ConfigGetter {
             InputStream inputStream = assetManager.open("config.properties");
             p.load(inputStream);
 
-            Log.i("properties", p.toString());
-
             //Récupération des paramétres de configurations de la base de données via le fichier config
             databaseConfig.put("hostname", p.getProperty("hostname"));
             databaseConfig.put("port", p.getProperty("port"));
@@ -52,17 +50,17 @@ public class ConfigGetter {
         }
     }
 
+    //Méthode retournant le starter d'item pour un nouvel utilisateur
     public ArrayList<Integer> getStarterItems(){
         try {
 
+            //On créer la liste qui sera retournée
             ArrayList<Integer> returnedItems = new ArrayList<>();
 
             //Récupération du fichier du start d'items
             AssetManager assetManager = context.getAssets();
             BufferedReader reader = new BufferedReader(new InputStreamReader(assetManager.open("startItems.json")));
             //Récupération en string du contenu du fichier
-            int c = 0;
-
             String line = "" ;
             StringBuilder sb = new StringBuilder();
             while ((line = reader.readLine()) != null) {
@@ -81,7 +79,9 @@ public class ConfigGetter {
                 returnedItems.add((Integer) items.get(i));
             }
             return returnedItems;
-        } catch (Exception e) {
+        }
+        //Si erreur on retourne null
+        catch (Exception e) {
             e.printStackTrace();
             return null;
         }

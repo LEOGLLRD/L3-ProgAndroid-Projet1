@@ -154,6 +154,8 @@ public class HomeFragment extends Fragment {
                                 }
                             });
 
+
+
                     if (res == null) {
                         builder.setMessage(R.string.errorMessage);
                         builder.show();
@@ -167,6 +169,7 @@ public class HomeFragment extends Fragment {
 
                     String res2 = apiLoL.get();
 
+                    Log.i("res2Home", res2);
 
                     if (res2.contains("Error :") || res2.contains("Fail :")) {
 
@@ -199,6 +202,8 @@ public class HomeFragment extends Fragment {
                         preferenceUserRiot.setUserInfo("profileIconId", profileIconId);
                         preferenceUserRiot.setUserInfo("summonerLevel", summonerLevel);
 
+                        Log.i("Home Riot Infos", preferenceUserRiot.getUserInfo().toString());
+
                     }
 
                 }
@@ -228,10 +233,11 @@ public class HomeFragment extends Fragment {
             ChampAdapter adapter = new ChampAdapter(getActivity(), champs);
             listViewChampion.setAdapter(adapter);
 
-            //Création du tableau de tous les items
+
+           //Création du tableau de tous les items
 
             apiLoL = new ApiLoL(this.getContext());
-            apiLoL.execute("getAllItemInfo", "EUW1");
+            apiLoL.execute("getAllItemInfo");
 
             ArrayList<Item> items = new ArrayList<Item>();
             //On récupère le json des items
@@ -250,13 +256,13 @@ public class HomeFragment extends Fragment {
 
             }
 
-            //Génération de l'affichage des champions
+            //Génération de l'affichage des items
             ItemAdapter itemAdapter = new ItemAdapter(getActivity(), items);
             listViewItem.setAdapter(itemAdapter);
 
 
         } catch (InterruptedException | ExecutionException | JSONException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return v;
     }

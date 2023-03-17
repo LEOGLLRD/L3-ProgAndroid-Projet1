@@ -6,7 +6,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.inventairelol.Util.ConfigGetter;
+
 import org.mindrot.jbcrypt.BCrypt;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -36,7 +38,6 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
         this.pass = config.get("password");
         this.database = config.get("database");
         this.url = "jdbc:mysql://" + hostname + ":" + port + "/" + database;
-
 
 
     }
@@ -145,7 +146,6 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                 }
                 //Si login appel de la méthode login
                 case "login": {
-
                     connect();
                     if (!isDbConnected()) {
                         progressDialog.dismiss();
@@ -180,10 +180,33 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                 }
                 case "getRiotUsernameAndRegion": {
                     connect();
+                    if (!isDbConnected()) {
+                        progressDialog.dismiss();
+                        return "Error : Not Connected";
+                    }
                     //Récupération du pseudo
                     String pseudo = strings[1];
                     progressDialog.dismiss();
                     return this.getRiotUsernameAndRegionFromPseudo(pseudo);
+                }
+                case "getUserInventory": {
+                    connect();
+                    if (!isDbConnected()) {
+                        progressDialog.dismiss();
+                        return "Error : Not Connected";
+                    }
+                    //Récupération du pseudo
+                    String pseudo = strings[1];
+                    String iduser = getIdFromPseudo(pseudo);
+                    ArrayList<String> inventory = getInventoryFromUserId(iduser);
+                    if (inventory.isEmpty()) {
+                        progressDialog.dismiss();
+                        return "Error : No Inventory Found";
+                    } else {
+                        progressDialog.dismiss();
+                        return inventory.toString();
+                    }
+
                 }
                 default: {
                     progressDialog.dismiss();
@@ -458,7 +481,7 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                 //On ajoute à l'inventaire de l'utilisateur chaque item
                 insertItem(idUser, String.valueOf(item));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -536,12 +559,25 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
         }
     }
 
-    public ArrayList<String> getInventoryFromUserId(String idUser){
-        try{
+    public ArrayList<String> getInventoryFromUserId(String idUser) {
+        try {
 
+            ArrayList<String> res = new ArrayList<>();
+            //On prépare la requête
+            PreparedStatement stmt = connection.prepareStatement("select idItem from inventory where idUser = ?");
+            //On ajoute le pseudo à la requête
+            stmt.setString(1, idUser);
+            //On execute la requête
+            ResultSet rs = stmt.executeQuery();
+            String id;
+            //Si on a un resultat
+            while (rs.next()) {
+                //On récupère l'id
+                res.add(rs.getString(1));
+            }
+            return res;
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
