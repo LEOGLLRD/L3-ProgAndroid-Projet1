@@ -165,6 +165,7 @@ public class Login extends AppCompatActivity {
 
         });
 
+        //Gestion mode invité
         Button asGuest = findViewById(R.id.invited);
         asGuest.setOnClickListener(new View.OnClickListener() {
             @Override

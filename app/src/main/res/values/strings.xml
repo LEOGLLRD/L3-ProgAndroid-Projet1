@@ -62,6 +62,8 @@
     <string name="apiKey">Clé API</string>
     <string name="cancel">Annuler</string>
     <string name="close">Fermer</string>
+    <string name="cannotReachAPI">Impossible de joindre l\'API</string>
+    <string name="checkAPIKey">Vérifiez la clé API</string>
 
 
 

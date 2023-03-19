@@ -73,7 +73,10 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                 //Si "connect"
                 case "connect": {
                     //On se connect à la BDD
-                    connect();
+                    if (!connect()){
+                        return "Error : Database not joinable";
+                    }
+
                     //Suppression du chargement
                     progressDialog.dismiss();
 
@@ -84,7 +87,10 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
 
 
                     //On se connecte à la base de données
-                    connect();
+                    if (!connect()){
+                        return "Error : Database not joinable";
+                    }
+
                     //Vérification si la connexion est valide
                     if (!isDbConnected()) {
                         //Suppression du chargement
@@ -146,11 +152,10 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                 }
                 //Si login appel de la méthode login
                 case "login": {
-                    connect();
-                    if (!isDbConnected()) {
-                        progressDialog.dismiss();
-                        return "Error : Not Connected";
+                    if (!connect()){
+                        return "Error : Database not joinable";
                     }
+
                     //Récupération du pseudo et du password
                     String pseudo = strings[1];
                     String password = strings[2];
@@ -179,7 +184,10 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
 
                 }
                 case "getRiotUsernameAndRegion": {
-                    connect();
+                    if (!connect()){
+                        return "Error : Database not joinable";
+                    }
+
                     if (!isDbConnected()) {
                         progressDialog.dismiss();
                         return "Error : Not Connected";
@@ -190,7 +198,10 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                     return this.getRiotUsernameAndRegionFromPseudo(pseudo);
                 }
                 case "getUserInventory": {
-                    connect();
+                    if (!connect()){
+                        return "Error : Database not joinable";
+                    }
+
                     if (!isDbConnected()) {
                         progressDialog.dismiss();
                         return "Error : Not Connected";
@@ -233,6 +244,7 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                 try {
                     Class.forName("com.mysql.jdbc.Driver");
                     connection = DriverManager.getConnection(url, user, pass);
+
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {

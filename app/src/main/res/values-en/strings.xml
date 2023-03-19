@@ -64,7 +64,8 @@
     <string name="apiKey">API Key</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
-
+    <string name="cannotReachAPI">Impossible to reach API</string>
+    <string name="checkAPIKey">Please check API KEY</string>
 
 
 
