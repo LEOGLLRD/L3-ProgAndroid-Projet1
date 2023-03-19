@@ -3,8 +3,10 @@ package com.example.inventairelol.Service;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.inventairelol.R;
+import com.example.inventairelol.Util.ApiKeyGetter;
 import com.example.inventairelol.Util.ConfigGetter;
 
 import org.json.JSONArray;
@@ -32,12 +34,11 @@ public class ApiLoL extends AsyncTask<String, Void, String> {
 
         try {
             //Récupération clé API
-            //Récupération du fichier de configuration
-            Map<String, String> config = new ConfigGetter(context).getDatabaseConfig();
+            ApiKeyGetter keyGetter = new ApiKeyGetter(context);
             //Récupération des paramétres de configurations
-            this.apiKey = config.get("apiKey");
+            this.apiKey = keyGetter.getApiKey();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -80,10 +81,6 @@ public class ApiLoL extends AsyncTask<String, Void, String> {
 
             //Récupération de la directiv
             String directiv = strings[0];
-            //Récupération de la clé API
-
-
-
 
             switch (directiv) {
                 //Récupération des informations d'un joueur
@@ -170,6 +167,27 @@ public class ApiLoL extends AsyncTask<String, Void, String> {
                 case "getVersion": {
                     progressDialog.dismiss();
                     return getVersion();
+                }
+
+                case "getChampDescription": {
+
+                    String idChamp = strings[1];
+
+                    URL url = new URL("https://ddragon.leagueoflegends.com/cdn/" + version + "/data/" + context.getResources().getString(R.string.lang) + "/champion/" + idChamp + ".json");
+
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    int responseCode = urlConnection.getResponseCode();
+
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        server_response = readStream(urlConnection.getInputStream());
+                        //Suppression du chargement
+                        progressDialog.dismiss();
+                        return server_response;
+                    } else {
+                        //Suppression du chargement
+                        progressDialog.dismiss();
+                        return "Fail : No respons from server";
+                    }
                 }
 
 

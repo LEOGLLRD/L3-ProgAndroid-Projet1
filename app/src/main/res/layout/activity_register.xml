@@ -8,6 +8,15 @@
     tools:context=".Activities.Register">
 
 
+    <Button
+        android:id="@+id/apiKey2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/apiKey" />
+
     <CheckBox
         android:id="@+id/remember2"
         android:layout_width="wrap_content"

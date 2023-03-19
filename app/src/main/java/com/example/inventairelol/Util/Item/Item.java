@@ -3,7 +3,7 @@ package com.example.inventairelol.Util.Item;
 
 
 public class Item {
-
+    String id;
     String name;
     String urlImg;
 
@@ -33,4 +33,13 @@ public class Item {
     public String toString() {
         return this.name + " " + this.urlImg;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 }

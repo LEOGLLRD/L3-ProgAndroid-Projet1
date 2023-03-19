@@ -57,6 +57,11 @@
     <string name="logOut">Se déconnecter</string>
     <string name="acceptLocation">Vous devez autoriser la localisation</string>
     <string name="localisation">Afficher votre ville</string>
+    <string name="champions">Champions :</string>
+    <string name="items">Items :</string>
+    <string name="apiKey">Clé API</string>
+    <string name="cancel">Annuler</string>
+    <string name="close">Fermer</string>
 
 
 

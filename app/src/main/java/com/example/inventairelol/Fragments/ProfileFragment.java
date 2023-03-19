@@ -11,7 +11,9 @@ import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -27,11 +29,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.Settings;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +47,8 @@ import com.example.inventairelol.Activities.Register;
 import com.example.inventairelol.DataBase.SQLiteBDD;
 import com.example.inventairelol.R;
 
+import com.example.inventairelol.Util.ApiKeyGetter;
+import com.example.inventairelol.Util.ConfigGetter;
 import com.example.inventairelol.Util.Preferences.PreferenceUserRiot;
 import com.example.inventairelol.Util.Preferences.PreferencesUser;
 
@@ -72,6 +78,8 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    Context context = this.getActivity();
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -131,6 +139,7 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
         Button button = (Button) view.findViewById(R.id.goProfil);
         Button buttonGoregister = (Button) view.findViewById(R.id.goRegister);
         Button buttonLogout = (Button) view.findViewById(R.id.logOut);
+        Button buttonApiKey = (Button) view.findViewById(R.id.apiKey);
 
         //Localisation
         TextView textViewLocalisation = (TextView) view.findViewById(R.id.tv_location);
@@ -197,16 +206,49 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
     buttonLogout.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("pseudo", "");
-            editor.putString("password", "");
-            editor.apply();
+            preferencesUser.setUserInfo("pseudo", "");
+            preferencesUser.setUserInfo("password", "");
             Intent intent = new Intent(getActivity(), Login.class);
             startActivity(intent);
             getActivity().finish();
         }
     });
+
+    //Boutton pour modifier la clé API
+    buttonApiKey.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+            builder.setTitle(R.string.apiKey);
+
+            // Préparation de l'editText
+            final EditText input = new EditText(view.getContext());
+            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            builder.setView(input);
+
+            //Action des boutons
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ApiKeyGetter keyGetter = new ApiKeyGetter(view.getContext());
+                    keyGetter.setApiKey(input.getText().toString());
+
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
+        }
+    });
+
+
 
 
         buttonGoregister.setOnClickListener(new View.OnClickListener() {

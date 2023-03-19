@@ -1,16 +1,36 @@
 package com.example.inventairelol.Fragments;
 
-import android.database.Cursor;
+import static com.example.inventairelol.DataBase.SQLiteBDD.COLONNE_ID_API;
+import static com.example.inventairelol.DataBase.SQLiteBDD.TABLE_INVENTORY;
+
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.example.inventairelol.DataBase.SQLiteBDD;
 import com.example.inventairelol.R;
+import com.example.inventairelol.Service.ApiLoL;
+import com.example.inventairelol.Service.ServiceOnlineMYSQL;
+import com.example.inventairelol.Util.Item.Item;
+import com.example.inventairelol.Util.Item.ItemAdapter;
+import com.example.inventairelol.Util.Preferences.PreferencesUser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,7 +39,10 @@ import com.example.inventairelol.R;
  */
 public class InventoryFragment extends Fragment {
 
-    static SQLiteBDD localSQL;
+    SQLiteBDD localSQL;
+    private ServiceOnlineMYSQL serviceOnlineMYSQL;
+    private ApiLoL apiLoL;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,10 +90,138 @@ public class InventoryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inventory, container, false);
 
-        //Instanciation de la base de données Local.
-        localSQL = new SQLiteBDD(getActivity().getApplicationContext(), "leo");
+
+        try {
 
 
+            PreferencesUser preferencesUser = new PreferencesUser(getActivity());
+            Map<String, String> infosUser = preferencesUser.getUserInfo();
+            String connected = "false";
+            if (infosUser.containsKey("connected")) {
+                connected = infosUser.get("connected");
+            }
+
+            //Connecté
+            if (connected.equals("true")) {
+                String pseudo = infosUser.get("pseudo");
+                //Instanciation de la base de données Local.
+                localSQL = new SQLiteBDD(getActivity());
+                //Recuperation du Writable
+                SQLiteDatabase dbW = localSQL.getWritableDatabase();
+                //On vide la base de données,
+                //On veut que la base de données soit à jour avec celle en ligne
+                localSQL.resetInventory(dbW);
+                //On récupère les infos de celle en ligne et on insère dans la locale
+                initializeFromOnlineMYSQL(dbW, pseudo);
+                SQLiteDatabase dbR = localSQL.getReadableDatabase();
+                ArrayList<String> inventory = localSQL.getInventory(dbR);
+
+                //Gestion de l'affichage de l'inventaire
+                JSONObject allItem = getJSONAllItem();
+                ArrayList<Item> items = new ArrayList<>();
+                //On récupère les infos correspondants aux items de l'utilisateur
+                for (String s : inventory
+                ) {
+                    String name = allItem.getJSONObject(s).getString("name");
+                    items.add(new Item(name, s+".png"));
+                }
+
+                Log.i("items", items.toString());
+
+                ListView itemsInventory = view.findViewById(R.id.itemsInventory);
+
+                //Génération de l'affichage des items
+                ItemAdapter itemAdapter = new ItemAdapter(getActivity(), items);
+                itemsInventory.setAdapter(itemAdapter);
+
+            }
+
+            //Pas connecté
+            else {
+
+
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return view;
+    }
+
+    public void initializeFromOnlineMYSQL(SQLiteDatabase db, String pseudo) {
+        ArrayList<String> inventory = getOnlineInventory(pseudo);
+        Log.i("inventory", inventory.toString());
+        for (String s : inventory) {
+            ContentValues values = new ContentValues();
+            values.put(COLONNE_ID_API, s);
+            db.insert(TABLE_INVENTORY, null, values);
+        }
+
+
+    }
+
+    //méthode retournant les id des items d'un utilisateur sous forme d'une List d'id en string
+    public ArrayList<String> getOnlineInventory(String pseudoUser) {
+        ArrayList<String> inventory = new ArrayList<>();
+        try {
+
+            serviceOnlineMYSQL = new ServiceOnlineMYSQL(getActivity());
+            serviceOnlineMYSQL.execute("getUserInventory", pseudoUser);
+            String res = serviceOnlineMYSQL.get();
+            res = res.replace("[", "");
+            res = res.replace("]", "");
+            res = res.replace(" ", "");
+            //Conversion tableau de string en ArrayList
+            Log.i("res", res);
+            Log.i("split", Arrays.toString(res.split(",")));
+            inventory = new ArrayList<>(Arrays.asList(res.split(",")));
+
+            return inventory;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return inventory;
+
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (localSQL != null) {
+            localSQL.close();
+        }
+        super.onDestroy();
+    }
+
+    public String getNameOfItemFromId(String id) {
+        try {
+            JSONObject allItem = getJSONAllItem();
+            Log.i("testAff", allItem.get("1000").toString());
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public JSONObject getJSONAllItem() {
+        try {
+
+            apiLoL = new ApiLoL(getActivity());
+            apiLoL.execute("getAllItemInfo");
+            ArrayList<Item> items = new ArrayList<Item>();
+            //On récupère le json des items
+            String res3 = apiLoL.get();
+
+            //On convertit le string en json
+            JSONObject jsonObject = new JSONObject(res3);
+            //On récupère les infos sur les items
+            JSONObject data = jsonObject.getJSONObject("data");
+
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

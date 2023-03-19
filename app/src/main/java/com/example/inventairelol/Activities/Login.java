@@ -3,17 +3,22 @@ package com.example.inventairelol.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.ServiceOnlineMYSQL;
+import com.example.inventairelol.Util.ApiKeyGetter;
 import com.example.inventairelol.Util.ConfigGetter;
 import com.example.inventairelol.Util.Preferences.PreferenceUserRiot;
 import com.example.inventairelol.Util.Preferences.PreferencesUser;
@@ -45,6 +50,7 @@ public class Login extends AppCompatActivity {
 
 
         MaterialButton goRegisterbtn = (MaterialButton) findViewById(R.id.goRegister);
+        Button buttonApiKey = (Button) findViewById(R.id.apiKey3);
         goRegisterbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,11 +99,7 @@ public class Login extends AppCompatActivity {
                             .setCancelable(false)
                             .setPositiveButton(R.string.understood, null);
 
-
                     String res = serviceOnlineMYSQL.get();
-
-
-
                     //Vérification echec
                     if (res.contains("Fail")) {
 
@@ -161,6 +163,56 @@ public class Login extends AppCompatActivity {
 
             }
 
+        });
+
+        Button asGuest = findViewById(R.id.invited);
+        asGuest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PreferencesUser preferencesUser = new PreferencesUser(Login.this);
+                preferencesUser.setUserInfo("save", "false");
+                preferencesUser.setUserInfo("connected", "false");
+                preferencesUser.setUserInfo("pseudo", "");
+                preferencesUser.setUserInfo("password", "");
+                //On affiche la page d'accueil
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        //Boutton pour modifier la clé API
+        buttonApiKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle(R.string.apiKey);
+
+                // Préparation de l'editText
+                final EditText input = new EditText(view.getContext());
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                builder.setView(input);
+
+                //Action des boutons
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ApiKeyGetter keyGetter = new ApiKeyGetter(view.getContext());
+                        keyGetter.setApiKey(input.getText().toString());
+
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }
         });
 
     }

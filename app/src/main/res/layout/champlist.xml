@@ -3,37 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants">
 
-    <ScrollView
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/nameChamp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:hint="championName"
+            android:paddingLeft="10dp"
+            android:shadowColor="#000000"
+            android:shadowDx="-4"
+            android:shadowDy="-4"
+            android:shadowRadius="1"
+            android:textColor="#D29D03"
+            android:textSize="20dp"></TextView>
 
+        <ImageView
+            android:id="@+id/imgChamp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_toRightOf="@id/nameChamp"
+            android:clickable="false"
+            android:focusable="false"
+            android:paddingRight="10dp" />
+    </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/nameChamp"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:hint="championName"></TextView>
-
-                <ImageView
-                    android:id="@+id/imgChamp"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_toRightOf="@id/nameChamp" />
-            </RelativeLayout>
-
-
-        </LinearLayout>
-    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
