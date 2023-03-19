@@ -10,6 +10,15 @@
     <!-- TODO: Update blank fragment layout -->
 
 
+    <Button
+        android:id="@+id/apiKey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/apiKey" />
+
     <TextView
         android:id="@+id/textViewSimple"
         android:layout_width="match_parent"

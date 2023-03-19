@@ -2,7 +2,9 @@ package com.example.inventairelol.Fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,9 +18,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.inventairelol.Activities.Login;
 import com.example.inventairelol.Activities.Register;
 import com.example.inventairelol.R;
@@ -36,10 +45,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,6 +112,8 @@ public class HomeFragment extends Fragment {
         ListView listViewChampion = v.findViewById(R.id.champions);
         ListView listViewItem = v.findViewById(R.id.items);
 
+        //Préparation de la PopUp
+        PopupWindow pop;
 
         try {
 
@@ -155,7 +169,6 @@ public class HomeFragment extends Fragment {
                             });
 
 
-
                     if (res == null) {
                         builder.setMessage(R.string.errorMessage);
                         builder.show();
@@ -202,7 +215,6 @@ public class HomeFragment extends Fragment {
                         preferenceUserRiot.setUserInfo("profileIconId", profileIconId);
                         preferenceUserRiot.setUserInfo("summonerLevel", summonerLevel);
 
-                        Log.i("Home Riot Infos", preferenceUserRiot.getUserInfo().toString());
 
                     }
 
@@ -225,7 +237,7 @@ public class HomeFragment extends Fragment {
             for (Iterator<String> it = data.keys(); it.hasNext(); ) {
                 String key = it.next();
                 JSONObject infoChamp = data.getJSONObject(key);
-                champs.add(new Champion(infoChamp.get("id").toString(), infoChamp.get("id").toString() + ".png"));
+                champs.add(new Champion(infoChamp.get("name").toString(), infoChamp.get("id").toString(), infoChamp.get("id").toString() + ".png", getActivity()));
 
             }
 
@@ -233,8 +245,55 @@ public class HomeFragment extends Fragment {
             ChampAdapter adapter = new ChampAdapter(getActivity(), champs);
             listViewChampion.setAdapter(adapter);
 
+            listViewChampion.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            //Gestion clique sur un champion
+            listViewChampion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    //On recupère le champion
+                    Champion champ = adapter.getChamp(i);
+                    champ.initializeLore();
+                    //On prépare une popup
+                    AlertDialog.Builder championDescription = new AlertDialog.Builder(view.getContext());
+                    AlertDialog _dialog;
+                    //On récupère le layoutInflater
+                    LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    //On prépare la view
+                    final View viewChamp = layoutInflater.inflate(R.layout.championdescription, null);
+                    championDescription.setView(viewChamp);
+                    TextView description = viewChamp.findViewById(R.id.description);
+                    TextView title = viewChamp.findViewById(R.id.Title);
+                    TextView name = viewChamp.findViewById(R.id.Name);
+                    ImageView arrierePlan = (ImageView) viewChamp.findViewById(R.id.champBackground);
 
-           //Création du tableau de tous les items
+                    //On modifie l'arrière plan
+                    String urlLoading = "https://ddragon.leagueoflegends.com/cdn/img/champion/loading/"+champ.getLoadingImg();
+                    Glide.with(view.getContext()).load(urlLoading)
+                            .apply(RequestOptions.bitmapTransform(new BlurTransformation(2,3)))
+                            .into(arrierePlan);
+                    //On modifie le nom
+                    name.setText(champ.getName());
+                    //On modifie le titre
+                    title.setText(champ.getTitle());
+                    //On modifie la description
+                    description.setText(champ.getLore());
+
+                    championDescription.create();
+                    _dialog = championDescription.show();
+                    Button closeBtn = (Button) viewChamp.findViewById(R.id.close);
+
+                    closeBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            _dialog.dismiss();
+
+                        }
+                    });
+                }
+            });
+
+
+            //Création du tableau de tous les items
 
             apiLoL = new ApiLoL(this.getContext());
             apiLoL.execute("getAllItemInfo");

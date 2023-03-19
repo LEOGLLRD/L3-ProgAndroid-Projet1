@@ -1,19 +1,28 @@
 package com.example.inventairelol.Util.Champion;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.ApiLoL;
+import com.example.inventairelol.Util.ApiKeyGetter;
 import com.example.inventairelol.Util.Champion.Champion;
 
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 
 
@@ -25,13 +34,17 @@ public class ChampAdapter extends BaseAdapter {
 
     private String version;
 
+    private String lore;
+
     public ChampAdapter(Context context, ArrayList<Champion> champs) throws ExecutionException, InterruptedException {
         this.context = context;
         this.champs = champs;
         //Récupération de la version actuelle de LoL
         ApiLoL apiLoL = new ApiLoL(context);
-        apiLoL.execute("getVersion", "RGAPI-d2e39834-878f-4c39-a650-406532246abe");
+        ApiKeyGetter keyGetter = new ApiKeyGetter(context);
+        apiLoL.execute("getVersion", keyGetter.getApiKey());
         this.version = apiLoL.get();
+
     }
 
     @Override
@@ -60,8 +73,9 @@ public class ChampAdapter extends BaseAdapter {
             nameChamp = view.findViewById(R.id.nameChamp);
             nameChamp.setText(champion.getName());
             imgChamp = view.findViewById(R.id.imgChamp);
-            String urlImg = "https://ddragon.leagueoflegends.com/cdn/" + this.version + "/img/champion/"+champion.getUrlImg();
+            String urlImg = "https://ddragon.leagueoflegends.com/cdn/" + this.version + "/img/champion/" + champion.getUrlImg();
             Glide.with(context).load(urlImg).into(imgChamp);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,4 +84,13 @@ public class ChampAdapter extends BaseAdapter {
 
         return view;
     }
+
+
+    public Champion getChamp(int position) {
+        return champs.get(position);
+    }
+
+
+
+
 }

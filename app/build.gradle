@@ -44,6 +44,7 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+    implementation 'jp.wasabeef:glide-transformations:4.3.0'
     implementation "org.mindrot:jbcrypt:0.4"
     implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'com.google.android.material:material:1.7.0'

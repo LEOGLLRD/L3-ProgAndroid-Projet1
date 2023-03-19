@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -41,7 +42,9 @@ public class ConfigGetter {
             databaseConfig.put("database", p.getProperty("database"));
             databaseConfig.put("username", p.getProperty("username"));
             databaseConfig.put("password", p.getProperty("password"));
-            databaseConfig.put("apiKey", p.getProperty("apiKey"));
+
+            inputStream.close();
+
 
             return databaseConfig;
         }catch (Exception e){
@@ -86,4 +89,5 @@ public class ConfigGetter {
             return null;
         }
     }
+
 }

@@ -16,6 +16,7 @@
         android:adjustViewBounds="true"
         android:src="@drawable/wallpaper"
         android:scaleType="centerCrop"
+        android:descendantFocusability="blocksDescendants"
         />
 
     <LinearLayout
@@ -36,6 +37,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/champions"
                 android:gravity="center_horizontal"
+                android:shadowColor="#000000"
+                android:shadowDx="-4"
+                android:shadowDy="-4"
+                android:shadowRadius="1"
+                android:textColor="#D29D03"
+                android:textSize="25dp"
                 />
 
             <ListView
@@ -59,7 +66,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/items" />
+                android:text="@string/items"
+                android:shadowColor="#000000"
+                android:shadowDx="-4"
+                android:shadowDy="-4"
+                android:shadowRadius="1"
+                android:textColor="#D29D03"
+                android:textSize="25dp"/>
 
             <ListView
                 android:id="@+id/items"

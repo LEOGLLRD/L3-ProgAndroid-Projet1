@@ -5,39 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/nameItem"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:paddingLeft="10dp"
+            android:shadowColor="#000000"
+            android:shadowDx="-4"
+            android:shadowDy="-4"
+            android:shadowRadius="1"
+            android:text="TextView"
+            android:textColor="#D29D03"
+            android:textSize="20dp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/imgItem"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_toRightOf="@id/nameItem"
+            android:paddingRight="10dp"
+            app:srcCompat="@drawable/baseline_info_24" />
+    </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/nameItem"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:shadowColor="#000000"
-                    android:shadowDx="-4"
-                    android:shadowDy="-4"
-                    android:shadowRadius="1"
-                    android:text="TextView"
-                    android:textColor="#D29D03"
-                    android:textSize="20dp" />
-
-                <ImageView
-                    android:id="@+id/imgItem"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_toRightOf="@id/nameItem"
-                    app:srcCompat="@drawable/baseline_info_24" />
-            </RelativeLayout>
-        </LinearLayout>
-    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,13 @@
 package com.example.inventairelol.Util.Item;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.inventairelol.R;
 import com.example.inventairelol.Service.ApiLoL;
+import com.example.inventairelol.Util.ApiKeyGetter;
 import com.example.inventairelol.Util.ConfigGetter;
 import com.example.inventairelol.Util.Item.Item;
 
@@ -32,8 +36,8 @@ public class ItemAdapter extends BaseAdapter {
         try {
             //Récupération de la version actuelle de LoL
             ApiLoL apiLoL = new ApiLoL(context);
-
-            apiLoL.execute("getVersion", new ConfigGetter(context).getDatabaseConfig().get("apiKey").toString());
+            ApiKeyGetter keyGetter = new ApiKeyGetter(context);
+            apiLoL.execute("getVersion", keyGetter.getApiKey());
             this.version = apiLoL.get();
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
@@ -78,4 +82,5 @@ public class ItemAdapter extends BaseAdapter {
 
         return view;
     }
+
 }
