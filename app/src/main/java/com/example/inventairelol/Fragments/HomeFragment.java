@@ -182,8 +182,6 @@ public class HomeFragment extends Fragment {
 
                     String res2 = apiLoL.get();
 
-                    Log.i("res2Home", res2);
-
                     if (res2.contains("Error :") || res2.contains("Fail :")) {
 
                     } else {

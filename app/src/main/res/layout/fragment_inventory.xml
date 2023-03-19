@@ -8,20 +8,31 @@
     android:background="@color/cardview_dark_background"
     tools:context=".Fragments.InventoryFragment">
 
-
-    <com.google.android.flexbox.FlexboxLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:flexDirection="row">
+        android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/itemsInventory"
+        <TextView
+            android:id="@+id/textViewSimple2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/noConnected"
+            android:textAlignment="center"
+            android:textSize="26dp" />
+
+        <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            ></ListView>
+            app:flexDirection="row">
 
-    </com.google.android.flexbox.FlexboxLayout>
+            <ListView
+                android:id="@+id/itemsInventory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></ListView>
 
+        </com.google.android.flexbox.FlexboxLayout>
+    </RelativeLayout>
 
 
 </FrameLayout>

@@ -14,6 +14,7 @@
         android:id="@+id/apiKey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
@@ -22,26 +23,19 @@
     <TextView
         android:id="@+id/textViewSimple"
         android:layout_width="match_parent"
-        android:layout_height="105dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="340dp"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:text="Profile Fragment"
+        android:textAlignment="center"
         android:textSize="26dp" />
 
     <Button
         android:id="@+id/goProfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="129dp"
-        android:layout_marginEnd="133dp"
-        android:layout_marginBottom="193dp"
+        android:layout_above="@id/goRegister"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
         android:text="@string/login" />
 
     <TextView
@@ -54,40 +48,30 @@
 
     <Button
         android:id="@+id/location"
-        android:layout_width="313dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="59dp"
-        android:layout_marginEnd="56dp"
-        android:layout_marginBottom="70dp"
+        android:layout_above="@id/logOut"
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true"
         android:text="@string/localisation" />
 
     <Button
         android:id="@+id/logOut"
-        android:layout_width="313dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="59dp"
-        android:layout_marginEnd="56dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="31dp"
         android:text="@string/logOut" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
-        android:layout_width="149dp"
-        android:layout_height="149dp"
-        android:layout_above="@+id/textViewSimple"
-        android:layout_alignParentStart="true"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginStart="7dp"
-        android:layout_marginTop="26dp"
-        android:layout_marginEnd="255dp"
-        android:layout_marginBottom="111dp"
+        android:layout_marginTop="20dp"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp" />
 
@@ -95,13 +79,11 @@
         android:id="@+id/goRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/location"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="129dp"
         android:background="@android:color/transparent"
         android:text="@string/register"
         android:textColor="@color/black" />
+
 </RelativeLayout>

@@ -88,8 +88,6 @@ public class MainActivity extends AppCompatActivity {
                 preferencesUser.setKeysEmpty(new String[]{"pseudo", "password"});
             }
 
-            Log.i("save", save);
-
 
             String pseudo = "";
             String pass = "";
@@ -107,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
                 connected = userInfo.get("connected");
             }
 
-
-            Log.i("connected", connected);
 
             if (connected.equals("false")) {
                 //On affiche la page principale
@@ -209,19 +205,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
-        ImageView fond = findViewById(R.id.fond);
-
-        super.onConfigurationChanged(newConfig);
-
-        int orientation = newConfig.orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT)
-            Log.d("tag", "Portrait");
-        else if (orientation == Configuration.ORIENTATION_LANDSCAPE)
-            Log.d("tag", "Landscape");
-
-
-    }
 }

@@ -67,12 +67,14 @@ public class SQLiteBDD extends SQLiteOpenHelper {
 
     }
 
-    public void resetInventory(SQLiteDatabase db){
-        db.delete(TABLE_INVENTORY,null, null);
+    //Méthode qui vide la base de donnée
+    public void resetInventory(SQLiteDatabase db) {
+        db.delete(TABLE_INVENTORY, null, null);
     }
 
-    public ArrayList<String> getInventory(SQLiteDatabase db){
-        //Read
+    //Méthode qui retourne toutes les valeurs dans la Base de données
+    public ArrayList<String> getInventory(SQLiteDatabase db) {
+
         String[] projection = {
                 COLONNE_ID_API,
                 COLONNE_ID
@@ -82,10 +84,10 @@ public class SQLiteBDD extends SQLiteOpenHelper {
 
         ArrayList itemIds = new ArrayList<>();
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 itemIds.add(cursor.getString(cursor.getColumnIndexOrThrow(COLONNE_ID_API)));
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
         cursor.close();

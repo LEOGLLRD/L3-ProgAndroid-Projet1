@@ -97,7 +97,6 @@ public class ApiLoL extends AsyncTask<String, Void, String> {
                     }
                     //Montage de l'url
                     URL url = new URL("https://" + region + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + username + "?api_key=" + apiKey);
-                    Log.v("url", url.toString());
                     urlConnection = (HttpURLConnection) url.openConnection();
                     int responseCode = urlConnection.getResponseCode();
 

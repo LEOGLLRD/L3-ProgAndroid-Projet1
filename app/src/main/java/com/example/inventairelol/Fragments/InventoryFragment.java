@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.inventairelol.DataBase.SQLiteBDD;
 import com.example.inventairelol.R;
@@ -23,13 +24,11 @@ import com.example.inventairelol.Util.Item.Item;
 import com.example.inventairelol.Util.Item.ItemAdapter;
 import com.example.inventairelol.Util.Preferences.PreferencesUser;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -89,11 +88,12 @@ public class InventoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inventory, container, false);
-
+        TextView simpleTextView = view.findViewById(R.id.textViewSimple2);
+        ListView itemsInventory = view.findViewById(R.id.itemsInventory);
 
         try {
 
-
+            simpleTextView.setVisibility(View.INVISIBLE);
             PreferencesUser preferencesUser = new PreferencesUser(getActivity());
             Map<String, String> infosUser = preferencesUser.getUserInfo();
             String connected = "false";
@@ -126,10 +126,6 @@ public class InventoryFragment extends Fragment {
                     items.add(new Item(name, s+".png"));
                 }
 
-                Log.i("items", items.toString());
-
-                ListView itemsInventory = view.findViewById(R.id.itemsInventory);
-
                 //Génération de l'affichage des items
                 ItemAdapter itemAdapter = new ItemAdapter(getActivity(), items);
                 itemsInventory.setAdapter(itemAdapter);
@@ -139,7 +135,8 @@ public class InventoryFragment extends Fragment {
             //Pas connecté
             else {
 
-
+                itemsInventory.setVisibility(View.INVISIBLE);
+                simpleTextView.setVisibility(View.VISIBLE);
 
             }
 
@@ -151,7 +148,6 @@ public class InventoryFragment extends Fragment {
 
     public void initializeFromOnlineMYSQL(SQLiteDatabase db, String pseudo) {
         ArrayList<String> inventory = getOnlineInventory(pseudo);
-        Log.i("inventory", inventory.toString());
         for (String s : inventory) {
             ContentValues values = new ContentValues();
             values.put(COLONNE_ID_API, s);
@@ -173,8 +169,6 @@ public class InventoryFragment extends Fragment {
             res = res.replace("]", "");
             res = res.replace(" ", "");
             //Conversion tableau de string en ArrayList
-            Log.i("res", res);
-            Log.i("split", Arrays.toString(res.split(",")));
             inventory = new ArrayList<>(Arrays.asList(res.split(",")));
 
             return inventory;
@@ -194,15 +188,6 @@ public class InventoryFragment extends Fragment {
         super.onDestroy();
     }
 
-    public String getNameOfItemFromId(String id) {
-        try {
-            JSONObject allItem = getJSONAllItem();
-            Log.i("testAff", allItem.get("1000").toString());
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
 
     public JSONObject getJSONAllItem() {
         try {

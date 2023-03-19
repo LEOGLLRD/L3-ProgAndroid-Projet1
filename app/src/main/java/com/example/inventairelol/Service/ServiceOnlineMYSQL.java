@@ -73,13 +73,11 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                 //Si "connect"
                 case "connect": {
                     //On se connect à la BDD
-                    if (!connect()){
+                    if (!connect()) {
                         return "Error : Database not joinable";
                     }
-
                     //Suppression du chargement
                     progressDialog.dismiss();
-
                     break;
                 }
                 //Si regsiter on appel la fonction register
@@ -87,7 +85,7 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
 
 
                     //On se connecte à la base de données
-                    if (!connect()){
+                    if (!connect()) {
                         return "Error : Database not joinable";
                     }
 
@@ -152,7 +150,7 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                 }
                 //Si login appel de la méthode login
                 case "login": {
-                    if (!connect()){
+                    if (!connect()) {
                         return "Error : Database not joinable";
                     }
 
@@ -184,7 +182,7 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
 
                 }
                 case "getRiotUsernameAndRegion": {
-                    if (!connect()){
+                    if (!connect()) {
                         return "Error : Database not joinable";
                     }
 
@@ -198,7 +196,7 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                     return this.getRiotUsernameAndRegionFromPseudo(pseudo);
                 }
                 case "getUserInventory": {
-                    if (!connect()){
+                    if (!connect()) {
                         return "Error : Database not joinable";
                     }
 
@@ -245,9 +243,7 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
                     Class.forName("com.mysql.jdbc.Driver");
                     connection = DriverManager.getConnection(url, user, pass);
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
+                } catch (SQLException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             });
@@ -363,9 +359,6 @@ public class ServiceOnlineMYSQL extends AsyncTask<String, Void, String> {
             res = stmt.executeUpdate();
 
             //Si une erreur à lieu, on retourne un String null
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return res;
         } catch (Exception e) {
             e.printStackTrace();
             return res;

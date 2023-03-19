@@ -29,6 +29,7 @@ public class ApiKeyGetter {
         this.context = context;
     }
 
+    //Permet de modifier la clé API
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
         try {
@@ -40,11 +41,14 @@ public class ApiKeyGetter {
         }
     }
 
+    //Récupère et retourne la clé API LoL
     public String getApiKey() {
         try {
 
+            //On vérifie si le fichier qui contient la clé API existe
             File file = context.getFileStreamPath(FILENAME);
 
+            //Si non, on informe a l'utilisateur qu'il doit renseigner la clé API
             if (file == null || !file.exists()){
                 //On créer une Alerte pour informer l'utilisateur
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -65,6 +69,9 @@ public class ApiKeyGetter {
 
             }
 
+            //Sinon
+
+            //On récupère la cle API
             FileInputStream inputStream = context.openFileInput(FILENAME);
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -77,6 +84,7 @@ public class ApiKeyGetter {
 
             this.apiKey = stringBuilder.toString();
             inputStream.close();
+            //Et on la retourne
             return apiKey;
 
         }catch (Exception e){

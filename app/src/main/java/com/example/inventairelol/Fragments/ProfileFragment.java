@@ -1,13 +1,5 @@
 package com.example.inventairelol.Fragments;
 
-import static android.content.Context.MODE_PRIVATE;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 
 import android.annotation.SuppressLint;
@@ -15,10 +7,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,7 +16,6 @@ import android.Manifest;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.Settings;
 import android.text.InputType;
@@ -42,13 +31,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.inventairelol.Activities.Login;
-import com.example.inventairelol.Activities.MainActivity;
 import com.example.inventairelol.Activities.Register;
-import com.example.inventairelol.DataBase.SQLiteBDD;
 import com.example.inventairelol.R;
 
 import com.example.inventairelol.Util.ApiKeyGetter;
-import com.example.inventairelol.Util.ConfigGetter;
 import com.example.inventairelol.Util.Preferences.PreferenceUserRiot;
 import com.example.inventairelol.Util.Preferences.PreferencesUser;
 
@@ -104,7 +90,7 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
     }
 
 
-    TextView textViewLocation ;
+    TextView textViewLocation;
 
 
     ImageView imageViewm;
@@ -130,7 +116,7 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
 
         //Pour gerer l'img
         imageViewm = (ImageView) view.findViewById(R.id.imageView);
-         textViewLocation = (TextView) view.findViewById(R.id.tv_location) ;
+        textViewLocation = (TextView) view.findViewById(R.id.tv_location);
 
         //Pour gerer le text
         TextView textView = (TextView) view.findViewById(R.id.textViewSimple);
@@ -149,10 +135,10 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
         buttonLocalisation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            //Check for location  permission
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                //Check for location  permission
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION);
-                }else{
+                } else {
                     showLocation();
                 }
             }
@@ -166,8 +152,8 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
         PreferencesUser preferencesUser = new PreferencesUser(getActivity());
         Map<String, String> infosUser = preferencesUser.getUserInfo();
 
-        String connected =  "false";
-        if (infosUser.containsKey("connected")){
+        String connected = "false";
+        if (infosUser.containsKey("connected")) {
             connected = infosUser.get("connected");
         }
 
@@ -175,16 +161,14 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
         String urlImg;
         if (connected.equals("true")) {
 
-            Log.i("infosRiot", infosRiot.toString());
-
             String profileIconId = "", name = "", summonerLevel = "";
-            if (infosRiot.containsKey("profileIconId")){
+            if (infosRiot.containsKey("profileIconId")) {
                 profileIconId = infosRiot.get("profileIconId");
             }
-            if (infosRiot.containsKey("name")){
+            if (infosRiot.containsKey("name")) {
                 name = infosRiot.get("name");
             }
-            if (infosRiot.containsKey("summonerLevel")){
+            if (infosRiot.containsKey("summonerLevel")) {
                 summonerLevel = infosRiot.get("summonerLevel");
             }
 
@@ -201,56 +185,55 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
         Glide.with(this).load(urlImg).into(imageViewm);
 
 
-    //boutton pour la deconnexion
+        //boutton pour la deconnexion
 
-    buttonLogout.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            preferencesUser.setUserInfo("pseudo", "");
-            preferencesUser.setUserInfo("password", "");
-            Intent intent = new Intent(getActivity(), Login.class);
-            startActivity(intent);
-            getActivity().finish();
-        }
-    });
+        buttonLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                preferencesUser.setUserInfo("pseudo", "");
+                preferencesUser.setUserInfo("password", "");
+                Intent intent = new Intent(getActivity(), Login.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
 
-    //Boutton pour modifier la clé API
-    buttonApiKey.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-            builder.setTitle(R.string.apiKey);
+        //Boutton pour modifier la clé API
+        buttonApiKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle(R.string.apiKey);
 
-            // Préparation de l'editText
-            final EditText input = new EditText(view.getContext());
-            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            builder.setView(input);
+                // Préparation de l'editText
+                final EditText input = new EditText(view.getContext());
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                builder.setView(input);
 
-            //Action des boutons
+                //Action des boutons
 
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ApiKeyGetter keyGetter = new ApiKeyGetter(view.getContext());
-                    keyGetter.setApiKey(input.getText().toString());
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ApiKeyGetter keyGetter = new ApiKeyGetter(view.getContext());
+                        keyGetter.setApiKey(input.getText().toString());
 
-                }
-            });
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
 
-            builder.show();
-        }
-    });
-
-
+                builder.show();
+            }
+        });
 
 
+        //Gestion clique bouton register
         buttonGoregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -258,6 +241,8 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
                 startActivity(intent);
             }
         });
+
+        //Gestion bouton se deconnecter
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), Login.class);
@@ -270,10 +255,10 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
     }
 
 
-    public void onRequestPermissionResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults){
-        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+    public void onRequestPermissionResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults) {
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             showLocation();
-        }else {
+        } else {
             Toast.makeText(getActivity(), "permission not granted!", Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
@@ -284,24 +269,24 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
     private void showLocation() {
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         //Check if gps is enable
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             textViewLocation.setText("Loading location..");
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100L, (float) 100, this);
 
-        }else{
+        } else {
             Toast.makeText(getActivity(), "Enable GPS! ", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         }
     }
 
 
-    private String hereLocation(Location location)  {
+    private String hereLocation(Location location) {
 
         String response = "";
         String lattitude = String.valueOf(location.getLatitude());
         String longitude = String.valueOf(location.getLongitude());
         String apiKeyLocalisation = "8ceaa7aed357415d5728b70c95b14e7f";
-        String url = "http://api.openweathermap.org/geo/1.0/reverse?lat=" + lattitude +"&lon="+ longitude +"&limit=100&appid=" + apiKeyLocalisation;
+        String url = "http://api.openweathermap.org/geo/1.0/reverse?lat=" + lattitude + "&lon=" + longitude + "&limit=100&appid=" + apiKeyLocalisation;
         ApiLocalisation apiLocalisation = new ApiLocalisation();
         apiLocalisation.execute(url);
         try {
@@ -313,7 +298,7 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
             String value = null;
             value = data.getString("name");
             return "City: " + value;
-        } catch (ExecutionException|JSONException|InterruptedException e) {
+        } catch (ExecutionException | JSONException | InterruptedException e) {
             e.printStackTrace();
             return "Error : No return from api";
         }
@@ -323,7 +308,7 @@ public class ProfileFragment extends Fragment implements BaseGpsListener {
     @Override
     public void onLocationChanged(Location location) {
         //update location
-            textViewLocation.setText(hereLocation(location));
+        textViewLocation.setText(hereLocation(location));
 
     }
 
